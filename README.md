@@ -115,26 +115,36 @@ Aqui se detallan las caracteristicas del codigo producido, las normas seguidas, 
 
 ### <u>Sub-Indice</u>
 
-1. [Logica y guias generales](#logica-y-guias-generales)
-2. [Archivo: Program.cs](#archivo-programcs)
-3. [Archivo: global.cs](#archivo-globalcs)
-4. [Archivo: character.cs](#archivo-charactercs)
+1. [Datos Generales](#datos-generales)
+2. [Archivo: tl1-proyectofinal2024-ArturoDLV.csproj](#archivo-tl1-proyectofinal2024-arturodlvcsproj)
+3. [Archivo: Program.cs](#archivo-programcs)
+4. [Archivo: global.cs](#archivo-globalcs)
+5. [Archivo: character.cs](#archivo-charactercs)
+6. [Archivos para la muestra de los textos](#archivos-para-el-texto)
 
 ---
 
-### Logica y guias generales
+### Datos Generales
 
-En primer lugar, como se puede notar en cualquier archivo de codigo, todos los nombres de variables, clases, metodos, etcetera; estan en ingles. Esto es debido a que me siento mas comodo programando asi, ya que toda mi vida lo he hecho en ingles, y ademas de esto, creo que es ventajoso por lo descriptivo en pocas letras que es el ingles, y porque toda empresa de software se maneja de esta manera.
+- **Nombres**: En primer lugar, como se puede notar en cualquier archivo de codigo, todos los nombres de variables, clases, metodos, etcetera; estan en ingles. Esto es debido a que me siento mas comodo programando asi, ya que toda mi vida lo he hecho en ingles, y ademas de esto, creo que es ventajoso por lo descriptivo en pocas letras que es el ingles, y porque toda empresa de software se maneja de esta manera.
 
-Luego, practicamente todas las decisiones sobre nombres, logica y modulacion, fueron guiadas por el libro "Clean Code", ya que luego de haberlo leido, siento que propone reglas y consejos muy utiles para producir un buen codigo. Si bien es probable que no he seguido a *raja tabla* cada item que se menciona en dicho libro, hice un esfuerzo consciente en intentarlo.
+- **Logica de diseño**: Las decisiones sobre nombres, logica y modulacion, fueron guiadas por el libro "Clean Code", ya que luego de haberlo leido, siento que propone reglas y consejos muy utiles para producir un buen codigo. Si bien es probable que no he seguido a *raja tabla* cada item que se menciona en dicho libro, hice un esfuerzo consciente en intentarlo.
 
-Por ultimo, he decidido modularizar lo mas posible el proyecto, de forma tal que sea facil de leer y mantenible a futuro. Esto incluye multiples archivos '.cs' cada uno cumpliendo sus funciones particulares y no irrumpiendo en el funcionamiento de otros modulos. Ademas utilice la funcionalidad de las "Regiones" para delimitar puntos importantes en la logica.
+- **Modularizacion**: He decidido modularizar lo mas posible el proyecto, de forma tal que sea facil de leer y mantenible a futuro. Esto incluye multiples archivos '.cs' cada uno cumpliendo sus funciones particulares y no irrumpiendo en el funcionamiento de otros modulos. Ademas utilice la funcionalidad de las "Regiones" para delimitar puntos importantes en la logica.
+
+- **Texto**: El programa permite la facil edicion de los textos, aun cuando la aplicacion ya fue compilada y publicada, mediante los archivos `.json` de lenguaje. Todo texto *(con excepcion de los mensajes de error o debug)* puede ser modficiado de esta manera.
+
+### Archivo: tl1-proyectofinal2024-ArturoDLV.csproj
+
+[Archivo](tl1-proyectofinal2024-ArturoDLV.csproj)
+
+Este es el archivo general del proyecto. Añadi una pequeña seccion para que ciertos archivos siempre esten disponibles, aun cuando se hace una compilacion y wrap de la aplicacion.
 
 ### Archivo: Program.cs
 
 [Archivo](Program.cs)
 
-Este es el archivo principal del program.
+Este es el archivo principal del programa.
 
 ### Archivo: global.cs
 
@@ -149,6 +159,19 @@ En este archivo se encuentra una clase estatica que provee a todo el codigo de v
 En este archivo se encuentra la clase usada para todos los personajes, y sus metodos e interacciones.
 Puntos notables:
 - <u>**Daño**:</u> Hacer y recibir daño son metodos separados, esta decision de diseño la tome ya que considero que son acciones que deben ser manejadas por su respectivo objeto; es decir, no creo que sea adecuado que una instancia cambie directamente los valores de otra. Ademas, esto permite implementaciones como ataques en area, o multiples enemigos atacando a un solo objetivo.
+
+### Archivos para la muestra de los textos
+
+[Carpeta de lenguajes](Localization)
+[texts.cs](texts.cs)
+[interface.cs](interface.cs)
+
+Todo el texto esta almacenado en archivos `.json`, se muestran dos lenguajes *(a priori Ingles y Español aunque el texto puede ser cualquiera)* en la carpeta de lenguajes. Cualquier texto modificado allí afectara al texto mostrado en pantalla.
+
+Cuando el programa inicia, lo primero que hace es buscar estos archivos y guardarlos en un objeto estatico y global que se encuentra en `texts.cs`. Si falla en abrirlos, encontrarlos, o cargarlos, el programa mostrara un error y se cerrara. Una vez cargado el archivo de lenguajes en su objeto, solamente se volvera a repetir esta accion si en las opciones el jugador cambia el lenguaje.
+
+Por ultimo, el archivo `interface.cs` es el encargado de *renderizar* todo el texto que se requiere, permitiendo facilidad de cambiar la estetica y orden del texto, sin necesidad de modificar la logica del programa principal.
+
 
 ## <u>Detalles del ordenador</u>
 

@@ -74,7 +74,8 @@ namespace namespaceCharacter
         public void takeDamage(float dmg)
         {
             int defence = (cArmor * cSpeed);
-            cCurrenthp -= ((dmg - defence)/GLOBAL.dmgAdjust);
+            dmg = Math.Max((dmg - defence),0);
+            cCurrenthp -= (dmg/GLOBAL.dmgAdjust);
         }
 
         public void levelUp()
@@ -258,22 +259,22 @@ namespace namespaceCharacter
                 int biggerN = 0;
                 cClass = "";
                 
-                if (CSpeed >= biggerN)
+                if (cSpeed >= biggerN)
                 {
                     biggerN = CSpeed;
                     cClass = "Scout";
                 }
-                if ((CDexterity * 2) >= biggerN)
+                if ((cDexterity * 2) >= biggerN)
                 {
                     biggerN = (CDexterity * 2);
                     cClass = "Rogue";
                 }
-                if (CArmor >= biggerN)
+                if (cArmor >= biggerN)
                 {
                     biggerN = CArmor;
                     cClass = "Knight";
                 }
-                if (CStrengh >= biggerN)
+                if (cStrengh >= biggerN)
                 {
                     biggerN = CStrengh;
                     cClass = "Barbarian";

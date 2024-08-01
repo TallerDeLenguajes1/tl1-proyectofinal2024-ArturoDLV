@@ -9,6 +9,12 @@ namespace namespaceGlobal
 
         //Constants
         public const float dmgAdjust = 500;
+        public const string locFolder = "Localization";
+        public const string locSp = (locFolder + "/sp.json");
+        public const string locEn = (locFolder + "/en.json");
+
+        //Variables
+        public static string locCurrentLanguage = locSp;
 
         //Level UP mechanic
         public static class LVLUP

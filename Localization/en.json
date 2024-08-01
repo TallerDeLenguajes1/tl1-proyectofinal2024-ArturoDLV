@@ -1,0 +1,9 @@
+{
+    "title": "DUNGEONS AND LANGUAGES",
+    "welcome": "Welcome player, to this turn based combat simulation",
+    "tutorial": "Input a number that corresponds to the desire option",
+    "play": "Play",
+    "characters": "Characters",
+    "options": "Options",
+    "exit": "Exit"
+}
