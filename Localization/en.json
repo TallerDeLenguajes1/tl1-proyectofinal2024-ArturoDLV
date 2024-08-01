@@ -5,5 +5,19 @@
     "play": "Play",
     "characters": "Characters",
     "options": "Options",
-    "exit": "Exit"
+    "exit": "Exit",
+    "goback": "Go back",
+    "makeinput": "Please input an option: ",
+    "naninput": "Input character not a number or otherwise invalid",
+    "outofrange": "Input number is not on the options list",
+    "tournament": "Tournament",
+    "oneVone": "1 versus 1",
+    "freeforall": "Free for all",
+    "customchar": "Create a custom character",
+    "randomchar": "Create random characters",
+    "browsechars": "Browse available characters",
+    "changelan": "Change the game's language",
+    "changedmgmod": "Change internal variable: Damage Adjust",
+    "changeattperlvl": "Change internal variable: Attributes per level",
+    "changetextcolor": "Change the color of the text"
 }

@@ -1,19 +1,21 @@
 # <u>Proyecto Final: Calabozos y Lenguajes</u>
 
-## <u>Tabla de Contenidos</u>
+## <u>Indice</u>
 
-1. [Descripción del Proyecto](#descripción-del-proyecto)
-2. [Tecnologías Utilizadas](#tecnologías-utilizadas)
-3. [Instructores](#instructores)
-4. [Información del Alumno](#información-del-alumno)
-5. [Evaluación](#evaluación)
-6. [Libertades Creativas](#libertades-creativas)
-7. [Sobre el codigo y los archivos](#sobre-el-codigo-y-los-archivos)
-8. [Detalles del ordenador](#detalles-del-ordenador)
+1. [`Descripción del Proyecto`](#descripción-del-proyecto)
+2. [`Tecnologías Utilizadas`](#tecnologías-utilizadas)
+3. [`Instructores`](#instructores)
+4. [`Información del Alumno`](#información-del-alumno)
+5. [`Evaluación`](#evaluación)
+6. [`Libertades Creativas`](#libertades-creativas)
+7. [`Sobre el codigo y los archivos`](#sobre-el-codigo-y-los-archivos)
+8. [`Detalles del ordenador`](#detalles-del-ordenador)
 
 ---
 
 ## <u>Descripción del Proyecto</u>
+
+### [`Volver al indice`](#indice)
 
 Este proyecto es el proyecto final de la materia "Taller de Lenguajes 1" de las carreras informaticas de la "Facultad de Ciencias Exactas y Tecnológicas de la Universidad Nacional de Tucumán". Como requisito final para la aprobacion de la materia se debe terminar y defender este proyecto ante los docentes de la catedra.
 
@@ -25,11 +27,13 @@ Crear un videojuego de combates por turnos que comparte características con jue
 
 - **Creación de personajes**: Se debe permitir la creacion de personajes con atributos fisicos y personales, tales como su nombre, fuerza y velocidad.
 - **Combate**: Los personajes creados deben ser capaces de combatir entre ellos, utilizando los atributos mencionados en el item superior para determinar, en conjunto con un cierto nivel de azar, los ganadores de la pelea.
-- **Persistencia de datos**: Se debe almacenar toda la información en archivos `.json` para su reutilización en distintas ejecuciones del programa. La informacion a guardar incluye a los personajes, sus atributos, y su historial de combate.
+- **Persistencia de datos**: Se debe almacenar toda la información en archivos **'.json'** para su reutilización en distintas ejecuciones del programa. La informacion a guardar incluye a los personajes, sus atributos, y su historial de combate.
 
 ---
 
 ## <u>Tecnologías Utilizadas</u>
+
+### [`Volver al indice`](#indice)
 
 1. **Framework**: .NET Core
     - Version: 8.0.303
@@ -49,18 +53,24 @@ Crear un videojuego de combates por turnos que comparte características con jue
 
 ## <u>Instructores</u>
 
+### [`Volver al indice`](#indice)
+
 - **Jefe de la cátedra**: Ingeniero Javier Graña.
 - **Docentes de práctica**: Ingeniero Agustín Décima y Tecnico Sergio Guardia.
 - **Ayudantes estudiantiles**: Estudiantes Mariano Girbau y Javier Nacchio.
 
 ## <u>Información del Alumno</u>
 
+### [`Volver al indice`](#indice)
+
 - **Nombre**: Ignacio Arturo de la Vega.
 - **DNI**: 44.742.681
 - **Carrera**: Licenciatura en Informática.
-- **Email de contacto**: [123ignaciodelavega@gmail.com](mailto:123ignaciodelavega@gmail.com)
+- **Email de contacto**: [`123ignaciodelavega@gmail.com`](mailto:123ignaciodelavega@gmail.com)
 
 ## <u>Evaluación</u>
+
+### [`Volver al indice`](#indice)
 
 **El proyecto debe cumplir con las siguientes rúbricas de evaluación, que se encuentran en el archivo adjunto [`Rubricas del Proyecto Final.pdf`](Rubricas%20del%20Proyecto%20Final.pdf):**
 
@@ -77,6 +87,8 @@ Crear un videojuego de combates por turnos que comparte características con jue
 
 ## <u>Libertades Creativas</u>
 
+### [`Volver al indice`](#indice)
+
 En esta seccion detallo todos los cambios, contenido añadido o eliminado, y cualquier detalle que no se presente a priori en los requisitos minimos de la consigna asignada para el projecto final. De esta manera quedan de forma explicitas las ***particularidades*** de mi proyecto.
 Cabe aclarar que muchas decisiones fueron tomadas con una gran inspiracion en el juego de mesa *"Dungeons and Dragons"*, ya que soy un gran fan; sin embargo la implementacion a codigo es completamente propia.
 
@@ -84,12 +96,14 @@ Cabe aclarar que muchas decisiones fueron tomadas con una gran inspiracion en el
 
 ### <u>Sub-Indice</u>
 
-1. [Sobre los personajes](#Sobre-los-personajes)
-2. [Sobre el combate](#Sobre-el-combate)
+1. [`Sobre los personajes`](#Sobre-los-personajes)
+2. [`Sobre el combate`](#Sobre-el-combate)
 
 ---
 
 ### Sobre los personajes
+
+#### [`Volver atras`](#sub-indice)
 
 - <u>**CLASES**:</u> La consigna no da ningun detalle sobre las clases, y bajo su mirada tan solo es un dato arbitrario y sin uso. Por esto mismo he armado *4 clases distintivas*, y cada una tiene sus particularidades, reflejadas en sus *estadisticas* y su *subida de nivel*. La clase puede ser elegida directamente en la creacion de personaje, o asignada automaticamente dependiendo de los atributos seleccionados. Las clases que se han añadido son:
     1. **El Barbaro**: Fuerza bruta con poca o nada durabilidad. Es la epitomia del dicho "La mejor defensa es una buena ofensa".
@@ -105,9 +119,13 @@ Cabe aclarar que muchas decisiones fueron tomadas con una gran inspiracion en el
 
 ### Sobre el combate
 
+#### [`Volver atras`](#sub-indice)
+
 - <u>**Iniciativa**</u>: En vez de dejar al azar quien va primero en un turno, he implementado un sistema por el cual la velocidad y destreza tienen un impacto considerable en esto, aunque aun permite una pequeña cantidad de azar. Antes de iniciar un combate, los personajes comparan iniciativa, y aquel que tenga un mayor numero atacara primero. En caso de tener iniciativas similares, entra en juego el azar.
 
 ## Sobre el codigo y los archivos
+
+### [`Volver al indice`](#indice)
 
 Aqui se detallan las caracteristicas del codigo producido, las normas seguidas, y la logica que se uso para ciertas decisiones de diseño. No es una lista extensiva, pero cubre los aspectos mas notables del codigo.
 
@@ -115,16 +133,18 @@ Aqui se detallan las caracteristicas del codigo producido, las normas seguidas, 
 
 ### <u>Sub-Indice</u>
 
-1. [Datos Generales](#datos-generales)
-2. [Archivo: tl1-proyectofinal2024-ArturoDLV.csproj](#archivo-tl1-proyectofinal2024-arturodlvcsproj)
-3. [Archivo: Program.cs](#archivo-programcs)
-4. [Archivo: global.cs](#archivo-globalcs)
-5. [Archivo: character.cs](#archivo-charactercs)
-6. [Archivos para la muestra de los textos](#archivos-para-el-texto)
+1. [`Datos Generales`](#datos-generales)
+2. [`Archivo: tl1-proyectofinal2024-ArturoDLV.csproj`](#archivo-tl1-proyectofinal2024-arturodlvcsproj)
+3. [`Archivo: Program.cs`](#archivo-programcs)
+4. [`Archivo: global.cs`](#archivo-globalcs)
+5. [`Archivo: character.cs`](#archivo-charactercs)
+6. [`Archivos para la muestra de los textos`](#archivos-para-el-texto)
 
 ---
 
 ### Datos Generales
+
+#### [`Volver atras`](#sub-indice-1)
 
 - **Nombres**: En primer lugar, como se puede notar en cualquier archivo de codigo, todos los nombres de variables, clases, metodos, etcetera; estan en ingles. Esto es debido a que me siento mas comodo programando asi, ya que toda mi vida lo he hecho en ingles, y ademas de esto, creo que es ventajoso por lo descriptivo en pocas letras que es el ingles, y porque toda empresa de software se maneja de esta manera.
 
@@ -132,29 +152,37 @@ Aqui se detallan las caracteristicas del codigo producido, las normas seguidas, 
 
 - **Modularizacion**: He decidido modularizar lo mas posible el proyecto, de forma tal que sea facil de leer y mantenible a futuro. Esto incluye multiples archivos '.cs' cada uno cumpliendo sus funciones particulares y no irrumpiendo en el funcionamiento de otros modulos. Ademas utilice la funcionalidad de las "Regiones" para delimitar puntos importantes en la logica.
 
-- **Texto**: El programa permite la facil edicion de los textos, aun cuando la aplicacion ya fue compilada y publicada, mediante los archivos `.json` de lenguaje. Todo texto *(con excepcion de los mensajes de error o debug)* puede ser modficiado de esta manera.
+- **Texto**: El programa permite la facil edicion de los textos, aun cuando la aplicacion ya fue compilada y publicada, mediante los archivos **'.json'** de lenguaje. Todo texto *(con excepcion de los mensajes de error o debug)* puede ser modficiado de esta manera.
 
 ### Archivo: tl1-proyectofinal2024-ArturoDLV.csproj
 
-[Archivo](tl1-proyectofinal2024-ArturoDLV.csproj)
+#### [`Volver atras`](#sub-indice-1)
+
+[`Archivo`](tl1-proyectofinal2024-ArturoDLV.csproj)
 
 Este es el archivo general del proyecto. Añadi una pequeña seccion para que ciertos archivos siempre esten disponibles, aun cuando se hace una compilacion y wrap de la aplicacion.
 
 ### Archivo: Program.cs
 
-[Archivo](Program.cs)
+#### [`Volver atras`](#sub-indice-1)
+
+[`Archivo`](Program.cs)
 
 Este es el archivo principal del programa.
 
 ### Archivo: global.cs
 
-[Archivo](global.cs)
+[`Archivo`](global.cs)
+
+#### [`Volver atras`](#sub-indice-1)
 
 En este archivo se encuentra una clase estatica que provee a todo el codigo de variables, constantes y metodos que se usan en cualquier sector del programa. Esto incluye aquellas variables de balance de la jugabilidad, para que, de ser necesario, se puedan modificar con facilidad y tengan efecto global.
 
 ### Archivo: character.cs
 
-[Archivo](character.cs)
+#### [`Volver atras`](#sub-indice-1)
+
+[`Archivo`](character.cs)
 
 En este archivo se encuentra la clase usada para todos los personajes, y sus metodos e interacciones.
 Puntos notables:
@@ -162,18 +190,22 @@ Puntos notables:
 
 ### Archivos para la muestra de los textos
 
-[Carpeta de lenguajes](Localization)
-[texts.cs](texts.cs)
-[interface.cs](interface.cs)
+#### [`Volver atras`](#sub-indice-1)
 
-Todo el texto esta almacenado en archivos `.json`, se muestran dos lenguajes *(a priori Ingles y Español aunque el texto puede ser cualquiera)* en la carpeta de lenguajes. Cualquier texto modificado allí afectara al texto mostrado en pantalla.
+- [`Carpeta de lenguajes`](Localization)
+- [`texts.cs`](texts.cs)
+- [`interface.cs`](interface.cs)
 
-Cuando el programa inicia, lo primero que hace es buscar estos archivos y guardarlos en un objeto estatico y global que se encuentra en `texts.cs`. Si falla en abrirlos, encontrarlos, o cargarlos, el programa mostrara un error y se cerrara. Una vez cargado el archivo de lenguajes en su objeto, solamente se volvera a repetir esta accion si en las opciones el jugador cambia el lenguaje.
+Todo el texto esta almacenado en archivos **'.json'**, se muestran dos lenguajes *(a priori Ingles y Español aunque el texto puede ser cualquiera)* en la carpeta de lenguajes. Cualquier texto modificado allí afectara al texto mostrado en pantalla.
 
-Por ultimo, el archivo `interface.cs` es el encargado de *renderizar* todo el texto que se requiere, permitiendo facilidad de cambiar la estetica y orden del texto, sin necesidad de modificar la logica del programa principal.
+Cuando el programa inicia, lo primero que hace es buscar estos archivos y guardarlos en un objeto estatico y global que se encuentra en **'texts.cs'**. Si falla en abrirlos, encontrarlos, o cargarlos, el programa mostrara un error y se cerrara. Una vez cargado el archivo de lenguajes en su objeto, solamente se volvera a repetir esta accion si en las opciones el jugador cambia el lenguaje.
+
+Por ultimo, el archivo **'interface.cs'** es el encargado de *renderizar* todo el texto que se requiere, permitiendo facilidad de cambiar la estetica y orden del texto, sin necesidad de modificar la logica del programa principal.
 
 
 ## <u>Detalles del ordenador</u>
+
+### [`Volver al indice`](#indice)
 
 **En caso de ser necesario para solucionar algun problema particular o por otra circunstancia, aqui se detalla informacion varia del ordenador en el cual fue desarrollado el proyecto:**
 

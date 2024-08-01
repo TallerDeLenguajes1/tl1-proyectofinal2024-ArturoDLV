@@ -4,23 +4,33 @@ namespace namespaceGlobal
     public static class GLOBAL
     {
 
-        //Instances
-        public static Random randomGen = new Random();
+        #region Instances
 
-        //Constants
-        public const float dmgAdjust = 500;
+        public static Random randomGen = new Random();
+        
+        #endregion
+
+        #region Constants
+
+        public const int consoleRefreshSleep = 100;
         public const string locFolder = "Localization";
         public const string locSp = (locFolder + "/sp.json");
         public const string locEn = (locFolder + "/en.json");
 
-        //Variables
-        public static string locCurrentLanguage = locSp;
+        #endregion
 
-        //Level UP mechanic
+        #region Variables
+
+        public static string locCurrentLanguage = locSp;
+        public static float dmgAdjust = 500;
+
+        #endregion
+
+        #region Level UP mechanic
         public static class LVLUP
         {
 
-            public const int attributesPerLevel = 2;    //How many attributes must be increased per level up
+            public static int attributesPerLevel = 2;
 
             #region Character's class values
             public static class SCOUT
@@ -106,6 +116,8 @@ namespace namespaceGlobal
             #endregion
 
         }
+
+        #endregion
 
     }
 

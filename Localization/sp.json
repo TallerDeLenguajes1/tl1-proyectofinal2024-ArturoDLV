@@ -5,5 +5,19 @@
     "play": "Jugar",
     "characters": "Personajes",
     "options": "Opciones",
-    "exit": "Salir"
+    "exit": "Salir",
+    "goback": "Volver atras",
+    "makeinput": "Porfavor ingrese una opcion: ",
+    "naninput": "El caracter que se ingreso no es un numero, o es invalido por otro motivo",
+    "outofrange": "El numero ingresado no esta en la lista de opciones",
+    "tournament": "Torneo",
+    "oneVone": "1 contra 1",
+    "freeforall": "Todos contra todos",
+    "customchar": "Crear un personaje personalizado",
+    "randomchar": "Crear personajes aleatorios",
+    "browsechars": "Ver personaje disponibles",
+    "changelan": "Cambiar lenguaje del juego",
+    "changedmgmod": "Cambiar variable interna: Ajuste de daño",
+    "changeattperlvl": "Cambiar variable interna: Attributos por nivel",
+    "changetextcolor": "Cambiar color del texto"
 }
