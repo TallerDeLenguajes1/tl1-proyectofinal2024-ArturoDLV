@@ -13,9 +13,26 @@ namespace namespaceGlobal
         #region Constants
 
         public const int consoleRefreshSleep = 100;
+
+        #region Paths
         public const string locFolder = "Localization";
         public const string locSp = (locFolder + "/sp.json");
         public const string locEn = (locFolder + "/en.json");
+        public const string sndFolder = "Sounds";
+        public const string fxFolder = (sndFolder + "/Effects");
+        public const string musFolder = (sndFolder + "/Music");
+        public const string musMegalovania = (musFolder + "/megalovania.mp3");
+        public const string musMenu = (musFolder + "/menu.mp3");
+        public const string fxHitScout = (fxFolder + "/arrow.wav");
+        public const string fxHitRogue = (fxFolder + "/dagger.wav");
+        public const string fxHitKnight = (fxFolder + "/sword.wav");
+        public const string fxHitBarbarian = (fxFolder + "/throwing_axe.wav");
+        public const string fxDeath = (fxFolder + "/death.wav");
+        public const string fxVictory = (fxFolder + "/victory.wav");
+        public const string fxError = (fxFolder + "/error.wav");
+        public const string fxSelect = (fxFolder + "/click.wav");
+        public const string fxOff = (fxFolder + "/off.wav");
+        #endregion
 
         #endregion
 

@@ -7,6 +7,7 @@ using namespaceGlobal;
 using namespaceCharacter;
 using namespaceTexts;
 using namespaceGUI;
+using namespaceSoundManager;
 
 #endregion
 
@@ -15,6 +16,7 @@ using namespaceGUI;
 checkFilesIntegrity();
 locLoad(GLOBAL.locCurrentLanguage);
 GUI.iniConsole();
+sndManager.iniMusic();
 mainMenu();
 
 #endregion
@@ -51,12 +53,58 @@ static bool locFilesAvailable()
     return check;
 }
 
+static bool musAvailable()
+{
+    bool check = false;
+
+    if (Directory.Exists(GLOBAL.sndFolder) == true)
+    {
+        if (Directory.Exists(GLOBAL.musFolder) == true)
+        {
+            if ((File.Exists(GLOBAL.musMegalovania) == true) && (File.Exists(GLOBAL.musMenu) == true))
+            {
+                check = true;
+            }
+        }
+    }
+
+    return check;
+}
+
+static bool fxAvailable()
+{
+    bool check = false;
+
+    if (Directory.Exists(GLOBAL.sndFolder) == true)
+    {
+        if (Directory.Exists(GLOBAL.fxFolder) == true)
+        {
+            if ((File.Exists(GLOBAL.fxDeath)) && (File.Exists(GLOBAL.fxError)) && (File.Exists(GLOBAL.fxHitBarbarian)) && (File.Exists(GLOBAL.fxHitKnight)) && (File.Exists(GLOBAL.fxHitRogue)) && (File.Exists(GLOBAL.fxHitScout)) && (File.Exists(GLOBAL.fxOff)) && (File.Exists(GLOBAL.fxSelect)) && (File.Exists(GLOBAL.fxVictory)))
+            {
+                check = true;
+            }
+        }
+    }
+
+    return check;
+}
+
 static void checkFilesIntegrity()
 {
 
     if (locFilesAvailable() == true)
     {
-
+        if (musAvailable() == true)
+        {
+            if (fxAvailable() == false)
+            {
+                showError(true,"Cannot acces sound effects");
+            }
+        }
+        else
+        {
+            showError(true,"Cannot acces music");
+        }
     }
     else
     {
@@ -151,6 +199,7 @@ static void mainMenu()
     {
         case 1:
         {
+            sndManager.switchMusic();
             playMenu();
             break;
         }
@@ -167,6 +216,7 @@ static void mainMenu()
         case 4:
         {
             GUI.refresh();
+            sndManager.disposeMusic();
             Environment.Exit(0);
             break;
         }

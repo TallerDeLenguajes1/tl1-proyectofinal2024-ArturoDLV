@@ -1,5 +1,6 @@
 using namespaceGlobal;
 using namespaceTexts;
+using namespaceSoundManager;
 using System.Text;
 
 namespace namespaceGUI

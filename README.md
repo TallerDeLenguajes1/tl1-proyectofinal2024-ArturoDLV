@@ -98,6 +98,7 @@ Cabe aclarar que muchas decisiones fueron tomadas con una gran inspiracion en el
 
 1. [`Sobre los personajes`](#Sobre-los-personajes)
 2. [`Sobre el combate`](#Sobre-el-combate)
+3. [`Sonido`](#sonido)
 
 ---
 
@@ -122,6 +123,12 @@ Cabe aclarar que muchas decisiones fueron tomadas con una gran inspiracion en el
 #### [`Volver atras`](#sub-indice)
 
 - <u>**Iniciativa**</u>: En vez de dejar al azar quien va primero en un turno, he implementado un sistema por el cual la velocidad y destreza tienen un impacto considerable en esto, aunque aun permite una pequeña cantidad de azar. Antes de iniciar un combate, los personajes comparan iniciativa, y aquel que tenga un mayor numero atacara primero. En caso de tener iniciativas similares, entra en juego el azar.
+
+### Sonido
+
+#### [`Volver atras`](#sub-indice)
+
+Se ha añadido musica y efectos de sonido al proyecto, utilizando la libreria NAudio para poder manejar facilmente los archivos de auido. Se utiliza un *thread* dedicado al *loopeo* de la musica.
 
 ## Sobre el codigo y los archivos
 
@@ -172,9 +179,9 @@ Este es el archivo principal del programa.
 
 ### Archivo: global.cs
 
-[`Archivo`](global.cs)
-
 #### [`Volver atras`](#sub-indice-1)
+
+[`Archivo`](global.cs)
 
 En este archivo se encuentra una clase estatica que provee a todo el codigo de variables, constantes y metodos que se usan en cualquier sector del programa. Esto incluye aquellas variables de balance de la jugabilidad, para que, de ser necesario, se puedan modificar con facilidad y tengan efecto global.
 
