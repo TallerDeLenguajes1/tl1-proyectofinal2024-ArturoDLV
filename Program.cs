@@ -4,16 +4,18 @@ using System.Text.Json;
 using System.Reflection;
 
 using namespaceGlobal;
-using namespaceCharacter;
+using namespaceConfig;
 using namespaceTexts;
 using namespaceGUI;
 using namespaceSoundManager;
+using namespaceCharacter;
 
 #endregion
 
 #region Main
 
 checkFilesIntegrity();
+configIni.loadData();
 locLoad(GLOBAL.locCurrentLanguage);
 GUI.iniConsole();
 sndManager.iniMusic();
@@ -112,6 +114,11 @@ static void checkFilesIntegrity()
         showError(true,"Language Files are missing, inaccesible or otherwise corrupted");
     }
 
+    if (File.Exists(GLOBAL.configIni) == false)
+    {
+        configIni.createDefault();
+    }
+
 }
 
 #endregion
@@ -203,7 +210,6 @@ static void mainMenu()
     {
         case 1:
         {
-            sndManager.switchMusic();
             playMenu();
             break;
         }
@@ -342,7 +348,7 @@ static void optionsMenu()
     {
         case 1:
         {
-            optionsLanguageMenu();
+            optionsLanguageChange();
             break;
         }
         case 2:
@@ -369,24 +375,167 @@ static void optionsMenu()
 
 }
 
-static void optionsLanguageMenu()
+static void optionsLanguageChange()
 {
+    if (GLOBAL.locCurrentLanguage == GLOBAL.locSp)
+    {
+        GLOBAL.locCurrentLanguage = GLOBAL.locEn;
+    }
+    else
+    {
+        GLOBAL.locCurrentLanguage = GLOBAL.locSp;
+    }
 
+    configIni.saveData("locCurrentLanguage",GLOBAL.locCurrentLanguage);
+    locLoad(GLOBAL.locCurrentLanguage);
+    optionsMenu();
 }
 
 static void optionsDmgAdjMenu()
 {
-    
+    GUI.changeDmgAdj();
+    GLOBAL.dmgAdjust = getValidDmgAdj();
+    configIni.saveData("dmgAdjust",GLOBAL.dmgAdjust.ToString());
+    optionsMenu();
+}
+
+static float getValidDmgAdj()
+{
+    float newValue = 500;
+    bool check = false;
+
+    while (check == false)
+    {
+        GUI.inputNumber();
+        bool parse = float.TryParse(Console.ReadLine(), out newValue);
+
+        if (parse == true)
+        {
+            if ((newValue > 0) && (newValue <= 1000))
+            {
+                check = true;
+                sndManager.fxPlay(1);
+            }
+            else
+            {
+                GUI.outOfRangeInput();
+                sndManager.fxPlay(0);
+            }
+        }
+        else
+        {
+            GUI.NaNinput();
+            sndManager.fxPlay(0);
+        }
+    }
+
+    return newValue;
 }
 
 static void optionsAttPLvlMenu()
 {
-    
+    GUI.changeAttPLvl();
+    GLOBAL.LVLUP.attributesPerLevel = inputOption(10);
+    configIni.saveData("attributesPerLevel",GLOBAL.LVLUP.attributesPerLevel.ToString());
+    optionsMenu();
 }
 
 static void optionsTxtColorMenu()
 {
-    
+    GUI.changeColor();
+    int option = inputOption(13);
+    switch (option)
+    {
+        case 1:
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+            configIni.saveData("textColor","white");
+            optionsTxtColorMenu();
+            break;
+        }
+        case 2:
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            configIni.saveData("textColor","green");
+            optionsTxtColorMenu();
+            break;
+        }
+        case 3:
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            configIni.saveData("textColor","red");
+            optionsTxtColorMenu();
+            break;
+        }
+        case 4:
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            configIni.saveData("textColor","blue");
+            optionsTxtColorMenu();
+            break;
+        }
+        case 5:
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            configIni.saveData("textColor","yellow");
+            optionsTxtColorMenu();
+            break;
+        }
+        case 6:
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            configIni.saveData("textColor","cyan");
+            optionsTxtColorMenu();
+            break;
+        }
+        case 7:
+        {
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            configIni.saveData("textColor","magenta");
+            optionsTxtColorMenu();
+            break;
+        }
+        case 8:
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            configIni.saveData("textColor","dkgreen");
+            optionsTxtColorMenu();
+            break;
+        }
+        case 9:
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            configIni.saveData("textColor","dkred");
+            optionsTxtColorMenu();
+            break;
+        }
+        case 10:
+        {
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
+            configIni.saveData("textColor","dkblue");
+            optionsTxtColorMenu();
+            break;
+        }
+        case 11:
+        {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            configIni.saveData("textColor","dkyellow");
+            optionsTxtColorMenu();
+            break;
+        }
+        case 12:
+        {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            configIni.saveData("textColor","dkcyan");
+            optionsTxtColorMenu();
+            break;
+        }
+        case 13:
+        {
+            optionsMenu();
+            break;
+        }
+    }
 }
 
 #endregion

@@ -15,6 +15,7 @@
     <Content Include="Sounds\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <PackageReference Include="ini-parser" Version="2.5.2" />
     <PackageReference Include="NAudio" Version="2.2.1" />
     <None Update="icon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

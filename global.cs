@@ -15,6 +15,8 @@ namespace namespaceGlobal
         public const int consoleRefreshSleep = 100;
 
         #region Paths
+
+        public const string configIni = "config.ini";
         public const string locFolder = "Localization";
         public const string locSp = (locFolder + "/sp.json");
         public const string locEn = (locFolder + "/en.json");
@@ -32,6 +34,7 @@ namespace namespaceGlobal
         public const string fxError = (fxFolder + "/error.wav");
         public const string fxSelect = (fxFolder + "/click.wav");
         public const string fxOff = (fxFolder + "/off.wav");
+
         #endregion
 
         #endregion
@@ -40,6 +43,7 @@ namespace namespaceGlobal
 
         public static string locCurrentLanguage = locSp;
         public static float dmgAdjust = 500;
+        public static ConsoleColor textColor = ConsoleColor.DarkGreen;
 
         #endregion
 

@@ -99,6 +99,7 @@ Cabe aclarar que muchas decisiones fueron tomadas con una gran inspiracion en el
 1. [`Sobre los personajes`](#Sobre-los-personajes)
 2. [`Sobre el combate`](#Sobre-el-combate)
 3. [`Sonido`](#sonido)
+4. [`Configurar dinamicamente`](#configurar-dinamicamente)
 
 ---
 
@@ -130,6 +131,17 @@ Cabe aclarar que muchas decisiones fueron tomadas con una gran inspiracion en el
 
 Se ha añadido musica y efectos de sonido al proyecto, utilizando la libreria NAudio para poder manejar facilmente los archivos de auido. Se utiliza un *thread* dedicado al *loopeo* de la musica.
 
+### Configurar dinamicamente
+
+#### [`Volver atras`](#sub-indice)
+
+Se permite cambiar ciertas opciones y valores mientras corre el programa mediante el menu de opciones proporcionado, las cuales se guardan y reutilizan en un archivo **.ini**.
+Las opciones brindadas son:
+1. Cambio de lenguaje.
+2. Cambio de la variable de ajuste de daño.
+3. Cambio de balance: Cantidad de atributos otorgados por nivel.
+4. Cambio del color del texto.
+
 ## Sobre el codigo y los archivos
 
 ### [`Volver al indice`](#indice)
@@ -142,10 +154,13 @@ Aqui se detallan las caracteristicas del codigo producido, las normas seguidas, 
 
 1. [`Datos Generales`](#datos-generales)
 2. [`Archivo: tl1-proyectofinal2024-ArturoDLV.csproj`](#archivo-tl1-proyectofinal2024-arturodlvcsproj)
-3. [`Archivo: Program.cs`](#archivo-programcs)
-4. [`Archivo: global.cs`](#archivo-globalcs)
-5. [`Archivo: character.cs`](#archivo-charactercs)
-6. [`Archivos para la muestra de los textos`](#archivos-para-el-texto)
+3. [`Librerias usadas`](#librerias-usadas)
+4. [`Archivo: Program.cs`](#archivo-programcs)
+5. [`Archivo: global.cs`](#archivo-globalcs)
+6. [`Archivo: character.cs`](#archivo-charactercs)
+7. [`Archivos para la muestra de los textos`](#archivos-para-la-muestra-de-los-textos)
+8. [`Archivo: sound_manager.cs`](#archivo-sound_managercs)
+9. [`Archivo: config_manager.cs`](#archivo-config_managercs)
 
 ---
 
@@ -160,6 +175,20 @@ Aqui se detallan las caracteristicas del codigo producido, las normas seguidas, 
 - **Modularizacion**: He decidido modularizar lo mas posible el proyecto, de forma tal que sea facil de leer y mantenible a futuro. Esto incluye multiples archivos '.cs' cada uno cumpliendo sus funciones particulares y no irrumpiendo en el funcionamiento de otros modulos. Ademas utilice la funcionalidad de las "Regiones" para delimitar puntos importantes en la logica.
 
 - **Texto**: El programa permite la facil edicion de los textos, aun cuando la aplicacion ya fue compilada y publicada, mediante los archivos **'.json'** de lenguaje. Todo texto *(con excepcion de los mensajes de error o debug)* puede ser modficiado de esta manera.
+
+- **Musica y efectos de sonido**: El programa consta de procesamiento basico de sonido por medio de la libreria NAudio.
+    - Contiene dos pistas de musica de bajos consumo de recursos, una para el combate y otra para los menus, ambas pistas pueden ser cambiadas *(aun cuando la aplicacion ya fue compilada y publicada)* por otras siempre y cuando mantengan el nombre, tipo de archivo, y un bitrate bajo. Solamente una pista puede ser reproducida en un momento dado, se debe cambiar entre una y otra.
+    - Contiene 9 efectos de sonido, los cuales pueden ser reproducidos en cualquier momento, con total independencia del estado de los otros. Contiene 1 efecto por clase, efectos para el menu y para el combate. Al igual que las pistas de musica pueden ser cambiados por otros, siempre y cuando se mantengan las mismas estipulaciones.
+
+- **Guardado de configuraciones de usuario**: El programa permite guardar preferencias sencillas mediante el uso de archivos **.ini**. Elegi usar este metodo de guardado en vez de usar archivos **.JSON** porque es el estandar de la industria cuando se trata de guardar opciones del usuario. Ademas, las opciones son sencillas y pocas, por lo que pense que el uso de la deserealizacion y serealizacion necesaria para JSON era demasiado.
+
+### Librerias usadas
+
+#### [`Volver atras`](#sub-indice-1)
+
+En este proyecto se usaron 2 librerias para el uso de ciertas caracteristicas de forma eficiente, estas son:
+1. [`NAudio`](https://github.com/naudio/NAudio): Permite el procesamiento de pistas de audio en diferentes *threads* de manera tal que se puede reproducir dichos audios independientemente del estado en cual se encuentre la logica principal del programa.
+2. [IniParser](https://www.nuget.org/packages/ini-parser): Permite el procesamiento de los archivos **.ini** para su uso en el programa. Brinda funciones de lectura y escritura.
 
 ### Archivo: tl1-proyectofinal2024-ArturoDLV.csproj
 
@@ -208,6 +237,22 @@ Todo el texto esta almacenado en archivos **'.json'**, se muestran dos lenguajes
 Cuando el programa inicia, lo primero que hace es buscar estos archivos y guardarlos en un objeto estatico y global que se encuentra en **'texts.cs'**. Si falla en abrirlos, encontrarlos, o cargarlos, el programa mostrara un error y se cerrara. Una vez cargado el archivo de lenguajes en su objeto, solamente se volvera a repetir esta accion si en las opciones el jugador cambia el lenguaje.
 
 Por ultimo, el archivo **'interface.cs'** es el encargado de *renderizar* todo el texto que se requiere, permitiendo facilidad de cambiar la estetica y orden del texto, sin necesidad de modificar la logica del programa principal.
+
+### Archivo: sound_manager.cs
+
+#### [`Volver atras`](#sub-indice-1)
+
+[`Archivo`](sound_manager.cs)
+
+En este archivo se maneja todo el procesamiento del audio, por medio de la libreria NAudio que provee de funciones y utilizacion de multiples *threads* para poder reproducir audios separados del procesamiento principal de la aplicacion.
+
+### Archivo: config_manager.cs
+
+#### [`Volver atras`](#sub-indice-1)
+
+[`Archivo`](config_manager.cs)
+
+Este archivo es el encargado del guardado y lectura de las opciones de usuario.
 
 
 ## <u>Detalles del ordenador</u>
