@@ -17,6 +17,7 @@ checkFilesIntegrity();
 locLoad(GLOBAL.locCurrentLanguage);
 GUI.iniConsole();
 sndManager.iniMusic();
+sndManager.iniFx();
 mainMenu();
 
 #endregion
@@ -175,15 +176,18 @@ static int inputOption(int optionsCount)
             if ((option >= 1) && (option <= optionsCount))
             {
                 check = true;
+                sndManager.fxPlay(1);
             }
             else
             {
                 GUI.outOfRangeInput();
+                sndManager.fxPlay(0);
             }
         }
         else
         {
             GUI.NaNinput();
+            sndManager.fxPlay(0);
         }
     }
 
@@ -215,8 +219,11 @@ static void mainMenu()
         }
         case 4:
         {
+            sndManager.fxPlay(2);
             GUI.refresh();
+            Thread.Sleep(1000);
             sndManager.disposeMusic();
+            sndManager.disposeFx();
             Environment.Exit(0);
             break;
         }

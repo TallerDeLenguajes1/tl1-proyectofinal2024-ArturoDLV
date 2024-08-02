@@ -6,6 +6,7 @@
     <RootNamespace>tl1_proyectofinal2024_ArturoDLV</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Localization\**\*.*">
@@ -14,9 +15,10 @@
     <Content Include="Sounds\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="NAudio" Version="2.2.1" />
+    <None Update="icon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
