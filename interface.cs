@@ -52,24 +52,41 @@ namespace namespaceGUI
 
         public static void makeInput()
         {
-            Console.Write(" " + TXT.makeinput);
+            Console.Write(" " + TXT.makeinput + ": ");
         }
 
         public static void inputNumber()
         {
-            Console.Write(" " + TXT.inputnumber);
+            Console.Write(" " + TXT.inputnumber + ": ");
         }
 
         public static void NaNinput()
         {
             horLines();
-            Console.WriteLine(TXT.naninput);
+            Console.WriteLine(" " + TXT.naninput);
         }
 
         public static void outOfRangeInput()
         {
             horLines();
-            Console.WriteLine(TXT.outofrange);
+            Console.WriteLine(" " + TXT.outofrange);
+        }
+
+        public static void inputString()
+        {
+            Console.Write(" " + TXT.inputstring + ": ");
+        }
+
+        public static void invalidString()
+        {
+            horLines();
+            Console.WriteLine(" " + TXT.invalidstring);
+        }
+
+        public static void invalidName()
+        {
+            horLines();
+            Console.WriteLine(" " + TXT.invaliname);
         }
 
         public static void tutorial()
@@ -122,6 +139,48 @@ namespace namespaceGUI
             Console.WriteLine("\n 1: " + TXT.customchar);
             Console.WriteLine(" 2: " + TXT.randomchar);
             Console.WriteLine(" 3: " + TXT.browsechars);
+            Console.WriteLine(" 4: " + TXT.resetcharacters);
+            Console.WriteLine(" 5: " + TXT.goback);
+            horLines();
+        }
+
+        public static void charCustomMenu(string name, string nick, int age, string _class, float hp, int spd, int str, int dex, int armor)
+        {
+            refresh();
+            Console.WriteLine("\n " + TXT.characters);
+            Console.WriteLine(" " + TXT.customchar);
+            horLines();
+            
+            string auxString;
+            int itemSep = 34; 
+            Console.WriteLine(" " + TXT.charpersonalinfo + ": \n");
+            auxString = (" | " + TXT.charname + ": " + name);
+            while (auxString.Length < itemSep) {auxString += " ";}
+            auxString += ("| " + TXT.charnick + ": " + nick);
+            Console.WriteLine(auxString);
+            auxString = ("\n | " + TXT.charage + ": " + age.ToString());
+            while (auxString.Length < itemSep) {auxString += " ";}
+            auxString += ("| " + TXT.charclass + ": " + classToText(_class));
+            Console.WriteLine(auxString);
+            auxString = "";
+            horLines();
+
+            Console.WriteLine(" " + TXT.charstatistics + ": \n");
+            Console.WriteLine(" | " + TXT.charhp + ": " + hp.ToString("N0") + "\n");
+            auxString += (" | " + TXT.charspd + ": " + spd.ToString("N0"));
+            while (auxString.Length < itemSep) {auxString += " ";}
+            auxString += (" | " + TXT.chardex + ": " + dex.ToString("N0"));
+            Console.WriteLine(auxString);
+            auxString = "";
+            auxString += (" | " + TXT.charstr + ": " + str.ToString("N0"));
+            while (auxString.Length < itemSep) {auxString += " ";}
+            auxString += (" | " + TXT.chararmor + ": " + armor.ToString("N0"));
+            Console.WriteLine(auxString);
+
+            tutorial();
+            Console.WriteLine("\n 1: " + TXT.charpersonalinfo);
+            Console.WriteLine(" 2: " + TXT.charstatistics);
+            Console.WriteLine(" 3: " + TXT.finishchar);
             Console.WriteLine(" 4: " + TXT.goback);
             horLines();
         }
@@ -192,6 +251,11 @@ namespace namespaceGUI
                     text = TXT.charbarbarian;
                     break;
                 }
+                default:
+                {
+                    text = "";
+                    break;
+                }
             }
 
             return text;
@@ -202,6 +266,96 @@ namespace namespaceGUI
             horLines();
             horLines();
             Console.WriteLine(" " + item.ToString() + ": " + TXT.goback + "\n");
+        }
+
+        public static void charShowInfo(int item, playerCharacter character)
+        {
+            string auxString = "";
+            int itemSep = 34;
+
+            refresh();
+            charListItem(item,character);
+            Console.WriteLine("\n " + TXT.charid + ": " + character.id.ToString());
+            horLines();
+
+            Console.WriteLine(" " + TXT.charpersonalinfo + ": \n");
+            auxString += (" | " + TXT.charnick + ": " + character.cNickname);
+            while (auxString.Length < itemSep) {auxString += " ";}
+            auxString += ("| " + TXT.charage + ": " + character.AGE.ToString());
+            Console.WriteLine(auxString);
+            auxString = "";
+            horLines();
+
+            Console.WriteLine(" " + TXT.charstatistics + ": \n");
+            Console.WriteLine(" | " + TXT.charxp + ":  " + character.XP.ToString());
+            Console.WriteLine(" | " + TXT.charhp + ": " + character.CURRENT_HP.ToString("N0") + "/" + character.MAX_HP.ToString("N0") + "\n");
+            auxString += (" | " + TXT.charspd + ": " + character.SPEED.ToString("N0"));
+            while (auxString.Length < itemSep) {auxString += " ";}
+            auxString += (" | " + TXT.chardex + ": " + character.DEXTERITY.ToString("N0"));
+            Console.WriteLine(auxString);
+            auxString = "";
+            auxString += (" | " + TXT.charstr + ": " + character.STRENGH.ToString("N0"));
+            while (auxString.Length < itemSep) {auxString += " ";}
+            auxString += (" | " + TXT.chararmor + ": " + character.ARMOR.ToString("N0"));
+            Console.WriteLine(auxString);
+        }
+
+        public static void charEditMenu()
+        {
+            tutorial();
+            Console.WriteLine("\n 1: " + TXT.charchangename);
+            Console.WriteLine(" 2: " + TXT.charchangenick);
+            Console.WriteLine(" 3: " + TXT.chardelete);
+            Console.WriteLine(" 4: " + TXT.goback);
+            horLines();
+        }
+
+        public static void charChangeName(bool flag)
+        {
+            string auxString = "";
+            if (flag == true) {auxString = TXT.charvalidname;} else {auxString = TXT.charvalidnick;}
+
+            refresh();
+            Console.WriteLine("\n " + TXT.charchangename);
+            Console.WriteLine("\n " + auxString);
+            horLines();
+        }
+
+        public static void charDeleteConfirm(int item, playerCharacter character)
+        {
+            refresh();
+            charListItem(item,character);
+            Console.WriteLine(" " + TXT.chardelete);
+            horLines();
+            Console.WriteLine(" " + TXT.chardeletesure);
+            Console.WriteLine(" " + TXT.chardeleteexplain);
+            horLines();
+            Console.WriteLine("\n 1: " + TXT.chardeleteconfirm);
+            Console.WriteLine(" 2: " + TXT.goback);
+            horLines();
+        }
+
+        public static void charResetConfirm()
+        {
+            refresh();
+            Console.WriteLine("\n " + TXT.characters);
+            Console.WriteLine(" " + TXT.resetcharacters);
+            horLines();
+            Console.WriteLine(" " + TXT.surereset);
+            Console.WriteLine(" " + TXT.explainreset);
+            horLines();
+            Console.WriteLine("\n 1: " + TXT.chardeleteconfirm);
+            Console.WriteLine(" 2: " + TXT.goback);
+            horLines();
+        }
+
+        public static void charNoCharacters()
+        {
+            refresh();
+            Console.WriteLine("\n " + TXT.characters + "\n");
+            horLines();
+            Console.WriteLine(" " + TXT.nocharacters);
+            horLines();
         }
 
         #endregion
@@ -229,7 +383,7 @@ namespace namespaceGUI
             horLines();
             Console.WriteLine("\n " + TXT.explaindmgadj);
             Console.WriteLine(" " + TXT.validdmgadj);
-            Console.WriteLine(" " + TXT.currentvalue + GLOBAL.dmgAdjust.ToString("N2"));
+            Console.WriteLine(" " + TXT.currentvalue + ": " + GLOBAL.dmgAdjust.ToString("N2"));
             horLines();
         }
 
@@ -241,7 +395,7 @@ namespace namespaceGUI
             horLines();
             Console.WriteLine("\n " + TXT.explainattperlvl);
             Console.WriteLine(" " + TXT.validattperlvl);
-            Console.WriteLine(" " + TXT.currentvalue + GLOBAL.LVLUP.attributesPerLevel.ToString());
+            Console.WriteLine(" " + TXT.currentvalue + ": " + GLOBAL.LVLUP.attributesPerLevel.ToString());
             horLines();
         }
 

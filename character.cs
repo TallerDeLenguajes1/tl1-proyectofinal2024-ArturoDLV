@@ -11,6 +11,7 @@ namespace namespaceCharacter
         #region Character Data
 
         private Guid ID;
+        public Guid id {get => ID;}
         private int cVictories;
         public int VICTORIES {get => cVictories;}
 
@@ -240,17 +241,29 @@ namespace namespaceCharacter
             }
         }
 
-        public void saveChar()
+        public void saveChar(bool addToIndex)
         {
             string fileName = (GLOBAL.charFolder + "/Char_" + ID.ToString() + ".json");
             string jsonString = JsonSerializer.Serialize(this,new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(fileName,jsonString);
 
-            StreamWriter index = new StreamWriter(GLOBAL.charIndex, append: true);
-            using (index)
+            if (addToIndex == true)
             {
-                index.WriteLine(ID.ToString());
+                StreamWriter index = new StreamWriter(GLOBAL.charIndex, append: true);
+                using (index)
+                {
+                    index.WriteLine(ID.ToString());
+                }
             }
+        }
+
+        public void deleteChar()
+        {
+            File.Delete(GLOBAL.charFolder + "/Char_" + ID.ToString() + ".json");
+            string[] updatedIndex = File.ReadAllLines(GLOBAL.charIndex);
+            updatedIndex = updatedIndex.Where(line => !line.Contains(ID.ToString())).ToArray();
+            File.WriteAllLines(GLOBAL.charIndex,updatedIndex);
+            characterManager.charactersList.Remove(this);
         }
 
         #endregion
@@ -323,6 +336,35 @@ namespace namespaceCharacter
         {
             charactersList.Sort((character1,character2) => character2.VICTORIES.CompareTo(character1.VICTORIES));
         }
+        
+        public static void resetCharacters()
+        {
+            for (int i = (charactersList.Count - 1); i >= 0; i--)
+            {
+                playerCharacter character = charactersList[i];
+                character.deleteChar();
+                charactersList.Remove(character);
+                character = null;
+            }
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+
+        public static bool isValidName(string name)
+        {
+            bool check = false;
+
+            if (String.IsNullOrEmpty(name) == false)
+            {
+                if (name.Length < 30)
+                {
+                    check = true;
+                }
+            }
+
+            return check;
+        }
 
         #region Loading Characters
 
@@ -390,8 +432,6 @@ namespace namespaceCharacter
         #region Random Characters Creation
         public static void makeRmdChar(int count)
         {
-
-            count = int.Clamp(count,1,5000);
             personalInfo data = generatePersonalInfo(count);
 
             for (int i = 0; i < count; i++)
@@ -401,10 +441,9 @@ namespace namespaceCharacter
                 string name = (data.info[i].name.title + " " + data.info[i].name.first + " " + data.info[i].name.last);
 
                 playerCharacter character = new playerCharacter(name,data.info[i].nick.nick,age,"",stats[0],stats[1],stats[2],stats[3],stats[4],Guid.NewGuid(),0);
-                character.saveChar();
+                character.saveChar(true);
                 charactersList.Add(character);
             }
-
         }
 
         private static int[] assignPoints()
@@ -455,7 +494,7 @@ namespace namespaceCharacter
 
         private static personalInfo generatePersonalInfo(int count)
         {
-            personalInfo information;
+            personalInfo personalInformation;
 
             if (GLOBAL.internetConnection == true)
             {
@@ -464,48 +503,60 @@ namespace namespaceCharacter
                 {
                     using (client)
                     {
-                        string response = client.GetStringAsync("https://randomuser.me/api/?inc=name,login&nat=mx,us,br&noinfo&results=" + count.ToString()).Result;
-                        information = JsonSerializer.Deserialize<personalInfo>(response);
-                        return information;
+                        string data = client.GetStringAsync("https://randomuser.me/api/?inc=name,login&nat=mx,us,br&noinfo&results=" + count.ToString()).Result;
+                        personalInformation = JsonSerializer.Deserialize<personalInfo>(data);
+                        return personalInformation;
                     }
                 }
                 catch
                 {
-                    throw;
+                    return noInternetInfo(count);
                 }
             }
             else
             {
-                information = new personalInfo();
-                information.info = new List<Result>(new Result[count]);
-                foreach (Result item in information.info)
-                {
-                    item.name.title = "Mr.";
-                    item.name.first = "Juan";
-                    item.name.last = "Comun";
-                    item.nick.nick = "J.J.";
-                }
-
-                return information;
+                return noInternetInfo(count);
             }
+        }
+
+        private static personalInfo noInternetInfo(int count)
+        {
+            personalInfo personalInformation = new personalInfo();
+            personalInformation.info = new List<Result>();
+            for (int i = 0; i < count; i++)
+            {
+                personalInformation.info.Add(new Result());
+            }
+
+            foreach (Result item in personalInformation.info)
+            {
+                item.name = new Name();
+                item.nick = new Login();
+                item.name.title = "Mr.";
+                item.name.first = "Juan";
+                item.name.last = "Comun";
+                item.nick.nick = "J.J.";
+            }
+
+            return personalInformation;
         }
 
         #region Personal Information API Classes
 
-        private class Login
+        public class Login
         {
             [JsonPropertyName("username")]
             public string? nick {get; set;}
         }
 
-        private class Name
+        public class Name
         {
             public string? title {get; set;}
             public string? first {get; set;}
             public string? last {get; set;}
         }
 
-        private class Result
+        public class Result
         {
             [JsonPropertyName("name")]
             public Name? name {get; set;}

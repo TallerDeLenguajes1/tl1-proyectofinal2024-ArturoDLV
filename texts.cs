@@ -25,6 +25,8 @@ namespace namespaceTexts
         public static string? naninput {get; set;}
         public static string? outofrange {get; set;}
         public static string? inputnumber {get; set;}
+        public static string? inputstring {get; set;}
+        public static string? invalidstring {get; set;}
         public static string? currentvalue {get; set;}
 
         #endregion
@@ -39,13 +41,22 @@ namespace namespaceTexts
 
         #region Characters
 
+        #region Menu
         public static string? customchar {get; set;}
+        public static string? finishchar {get; set;}
         public static string? randomchar {get; set;}
         public static string? explainrandomchar {get; set;}
         public static string? validrandomchar {get; set;}
         public static string? succesrandomchar {get; set;}
         public static string? browsechars {get; set;}
         public static string? explainbrwose {get; set;}
+        public static string? resetcharacters {get; set;}
+        public static string? surereset {get; set;}
+        public static string? explainreset {get; set;}
+        public static string? nocharacters {get; set;}
+        #endregion
+
+        #region Information
         public static string? charname {get; set;}
         public static string? charvictories {get; set;}
         public static string? charclass {get; set;}
@@ -54,6 +65,30 @@ namespace namespaceTexts
         public static string? charrogue {get; set;}
         public static string? charknight {get; set;}
         public static string? charbarbarian {get; set;}
+        public static string? charid {get; set;}
+        public static string? charpersonalinfo {get; set;}
+        public static string? charnick {get; set;}
+        public static string? charage {get; set;}
+        public static string? charstatistics {get; set;}
+        public static string? charxp {get; set;}
+        public static string? charhp {get; set;}
+        public static string? charspd {get; set;}
+        public static string? chardex {get; set;}
+        public static string? charstr {get; set;}
+        public static string? chararmor {get; set;}
+        #endregion
+
+        #region Edit Character
+        public static string? charchangename {get; set;}
+        public static string? charchangenick {get; set;}
+        public static string? charvalidname {get; set;}
+        public static string? charvalidnick {get; set;}
+        public static string? invaliname {get; set;}
+        public static string? chardelete {get; set;}
+        public static string? chardeletesure {get; set;}
+        public static string? chardeleteexplain {get; set;}
+        public static string? chardeleteconfirm {get; set;}
+        #endregion
 
         #endregion
 
@@ -115,6 +150,8 @@ namespace namespaceTexts
         public string? naninput {get; set;}
         public string? outofrange {get; set;}
         public string? inputnumber {get; set;}
+        public string? inputstring {get; set;}
+        public string? invalidstring {get; set;}
         public string? currentvalue {get; set;}
 
         #endregion
@@ -129,13 +166,22 @@ namespace namespaceTexts
 
         #region Characters
 
+        #region Menu
         public string? customchar {get; set;}
+        public string? finishchar {get; set;}
         public string? randomchar {get; set;}
         public string? explainrandomchar {get; set;}
         public string? validrandomchar {get; set;}
         public string? succesrandomchar {get; set;}
         public string? browsechars {get; set;}
         public string? explainbrwose {get; set;}
+        public string? resetcharacters {get; set;}
+        public string? surereset {get; set;}
+        public string? explainreset {get; set;}
+        public string? nocharacters {get; set;}
+        #endregion
+
+        #region Information
         public string? charname {get; set;}
         public string? charvictories {get; set;}
         public string? charclass {get; set;}
@@ -144,6 +190,30 @@ namespace namespaceTexts
         public string? charrogue {get; set;}
         public string? charknight {get; set;}
         public string? charbarbarian {get; set;}
+        public string? charid {get; set;}
+        public string? charpersonalinfo {get; set;}
+        public string? charnick {get; set;}
+        public string? charage {get; set;}
+        public string? charstatistics {get; set;}
+        public string? charxp {get; set;}
+        public string? charhp {get; set;}
+        public string? charspd {get; set;}
+        public string? chardex {get; set;}
+        public string? charstr {get; set;}
+        public string? chararmor {get; set;}
+        #endregion
+
+        #region Edit Character
+        public string? charchangename {get; set;}
+        public string? charchangenick {get; set;}
+        public string? charvalidname {get; set;}
+        public string? charvalidnick {get; set;}
+        public string? invaliname {get; set;}
+        public string? chardelete {get; set;}
+        public string? chardeletesure {get; set;}
+        public string? chardeleteexplain {get; set;}
+        public string? chardeleteconfirm {get; set;}
+        #endregion
 
         #endregion
 

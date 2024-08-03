@@ -2,6 +2,7 @@
 
 using System.Text.Json;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 using namespaceGlobal;
 using namespaceConfig;
@@ -28,7 +29,7 @@ mainMenu();
 
 #region Functions
 
-#region Files and Errors
+#region Checks and Files
 
 static void showError(bool close, string errorText)
 {
@@ -162,6 +163,31 @@ static void checkFilesIntegrity()
 
 }
 
+static async void checkInternetConnection()
+{
+    //If could not reach Google assume no stable internet connection
+    HttpClient client = new HttpClient();
+    try
+    {
+        using (client)
+        {
+            HttpResponseMessage response = await client.GetAsync("https://www.google.com");
+            if (response.IsSuccessStatusCode == false)
+            {
+                GLOBAL.internetConnection = false;
+            }
+            else
+            {
+                GLOBAL.internetConnection = true;
+            }
+        }
+    }
+    catch
+    {
+        GLOBAL.internetConnection = false;
+    }
+}
+
 #endregion
 
 #region Language
@@ -242,9 +268,35 @@ static int inputOption(int optionsCount)
     return option;
 }
 
+static string getString()
+{
+    bool check = false;
+    string pattern = @"^[\p{L}\d\s.!¡?¿'-_()]+$";
+    string str = "";
+
+    while (check == false)
+    {
+        GUI.inputString();
+        str = Console.ReadLine();
+        str = str.Trim();
+        if (Regex.IsMatch(str,pattern) == false)
+        {
+            GUI.invalidString();
+            sndManager.fxPlay(0);
+        }
+        else
+        {
+            check = true;
+            sndManager.fxPlay(1);
+        }
+    }
+
+    return str;
+}
+
 static void mainMenu()
 {
-
+   
     GUI.mainMenu();
     int option = inputOption(4);
     switch (option)
@@ -334,7 +386,7 @@ static void charMenu()
 {
 
     GUI.charMenu();
-    int option = inputOption(4);
+    int option = inputOption(5);
     switch (option)
     {
         case 1:
@@ -354,6 +406,11 @@ static void charMenu()
         }
         case 4:
         {
+            resetCharactersMenu();
+            break;
+        }
+        case 5:
+        {
             mainMenu();
             break;
         }
@@ -363,13 +420,30 @@ static void charMenu()
 
 static void charCustomMenu()
 {
+    string name = "";
+    string nick = "";
+    int age = 0;
+    string _class = "";
+    float hp = 100;
+    int spd = 1, dex = 1, str = 1, armor = 1;
+    double availablePoints = GLOBAL.charCreation.pointsGiven;
 
+    GUI.charCustomMenu(name,nick,age,_class,hp,spd,str,dex,armor);
+    int option = inputOption(4);
+    switch(option)
+    {
+        case 4:
+        {
+            charMenu();
+            break;
+        }
+    }
 }
 
 static void charRandomMenu()
 {
     GUI.charRmdMenu();
-    int count = inputOption(5000);
+    int count = inputOption(1000);
     characterManager.makeRmdChar(count);
     GUI.charSuccesRdm();
     Console.ReadLine();
@@ -379,30 +453,127 @@ static void charRandomMenu()
 static void charBrowseMenu()
 {
 
-    GUI.charBrowseMenu();
-    characterManager.sortListbyVictories();
-    int charCount = characterManager.charactersList.Count;
-    for (int i = 0; i < charCount; i++)
+    if (characterManager.charactersList.Count >= 1)
     {
-        GUI.charListItem(i,characterManager.charactersList[i]);
-    }
-    GUI.charEndBrowse(charCount + 1);
 
-    int option = inputOption(charCount + 1);
-    if (option == (charCount + 1))
-    {
-        charMenu();
+        GUI.charBrowseMenu();
+        characterManager.sortListbyVictories();
+        int charCount = characterManager.charactersList.Count;
+        for (int i = 0; i < charCount; i++)
+        {
+            GUI.charListItem(i,characterManager.charactersList[i]);
+        }
+        GUI.charEndBrowse(charCount + 1);
+
+        int option = inputOption(charCount + 1);
+        if (option == (charCount + 1))
+        {
+            charMenu();
+        }
+        else
+        {
+            charEditMenu((option - 1),characterManager.charactersList[option - 1]);
+        }
+
     }
     else
     {
-        charEditMenu(characterManager.charactersList[option]);
+        GUI.charNoCharacters();
+        Console.ReadLine();
+        charMenu();
     }
 
 }
 
-static void charEditMenu(playerCharacter character)
+static void charEditMenu(int item, playerCharacter character)
 {
+    GUI.charShowInfo(item,character);
+    GUI.charEditMenu();
+    int option = inputOption(4);
 
+    switch(option)
+    {
+        case 1:
+        {
+            GUI.charChangeName(true);
+            string name = getName();
+            character.cName = name;
+            character.saveChar(false);
+            charEditMenu(item,character);
+            break;
+        }
+        case 2:
+        {
+            GUI.charChangeName(false);
+            string nick = getName();
+            character.cNickname = nick;
+            character.saveChar(false);
+            charEditMenu(item,character);
+            break;
+        }
+        case 3:
+        {
+            GUI.charDeleteConfirm(item,character);
+            if (inputOption(2) == 1)
+            {
+                character.deleteChar();
+                character = null;
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                charBrowseMenu();
+            }
+            else
+            {
+                charEditMenu(item,character);
+            }
+            break;
+        }
+        case 4:
+        {
+            charBrowseMenu();
+            break;
+        }
+    }
+}
+
+static string getName()
+{
+    bool check = false;
+    string name = "";
+
+    while (check == false)
+    {
+        name = getString();
+        if (characterManager.isValidName(name) == false)
+        {
+            GUI.invalidString();
+        }
+        else
+        {
+            check = true;
+        }
+    }
+
+    return name;
+}
+
+static void resetCharactersMenu()
+{
+    if (characterManager.charactersList.Count >= 1)
+    {
+        GUI.charResetConfirm();
+        if (inputOption(2) == 1)
+        {
+            characterManager.resetCharacters();
+        }
+        charMenu();
+    }
+    else
+    {
+        GUI.charNoCharacters();
+        Console.ReadLine();
+        charMenu();
+    }
 }
 
 #endregion
@@ -612,33 +783,5 @@ static void optionsTxtColorMenu()
 
 #endregion
 
-#region Internet
-
-static async void checkInternetConnection()
-{
-    //If could not reach Google assume no stable internet connection
-    HttpClient client = new HttpClient();
-    try
-    {
-        using (client)
-        {
-            HttpResponseMessage response = await client.GetAsync("https://www.google.com");
-            if (response.IsSuccessStatusCode == false)
-            {
-                GLOBAL.internetConnection = false;
-            }
-            else
-            {
-                GLOBAL.internetConnection = true;
-            }
-        }
-    }
-    catch
-    {
-        GLOBAL.internetConnection = false;
-    }
-}
-
-#endregion
 
 #endregion
