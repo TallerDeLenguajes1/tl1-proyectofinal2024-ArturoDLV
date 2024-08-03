@@ -17,9 +17,11 @@ using namespaceCharacter;
 checkFilesIntegrity();
 configIni.loadData();
 locLoad(GLOBAL.locCurrentLanguage);
+checkInternetConnection();
 GUI.iniConsole();
 sndManager.iniMusic();
 sndManager.iniFx();
+characterManager.iniCharcters();
 mainMenu();
 
 #endregion
@@ -92,6 +94,43 @@ static bool fxAvailable()
     return check;
 }
 
+static void charCheck()
+{
+
+    if (Directory.Exists(GLOBAL.charFolder) == false)
+    {
+        showError(true,"Characters folder does not exist or cannot be acces");
+    }
+
+    if (File.Exists(GLOBAL.charIndex) == false)
+    {
+        showError(true,"Characters index does not exist or cannot be acces");
+    }
+    else
+    {
+        string[] index = File.ReadAllLines(GLOBAL.charIndex);
+        foreach (string item in index)
+        {
+            if (String.IsNullOrEmpty(item) == false)
+            {
+                Guid id;
+                if (Guid.TryParse(item, out id) == true)
+                {
+                    if(File.Exists(GLOBAL.charFolder + "/Char_" + item + ".json") == false)
+                    {
+                        showError(true,"A character exists in the character index, but does not have its corresponding .JSON file");
+                    }
+                }
+                else
+                {
+                    showError(true,"The character index is corrupted");
+                }
+            }
+        }
+    }
+
+}
+
 static void checkFilesIntegrity()
 {
 
@@ -118,6 +157,8 @@ static void checkFilesIntegrity()
     {
         configIni.createDefault();
     }
+
+    charCheck();
 
 }
 
@@ -327,12 +368,41 @@ static void charCustomMenu()
 
 static void charRandomMenu()
 {
-    
+    GUI.charRmdMenu();
+    int count = inputOption(5000);
+    characterManager.makeRmdChar(count);
+    GUI.charSuccesRdm();
+    Console.ReadLine();
+    charMenu();
 }
 
 static void charBrowseMenu()
 {
-    
+
+    GUI.charBrowseMenu();
+    characterManager.sortListbyVictories();
+    int charCount = characterManager.charactersList.Count;
+    for (int i = 0; i < charCount; i++)
+    {
+        GUI.charListItem(i,characterManager.charactersList[i]);
+    }
+    GUI.charEndBrowse(charCount + 1);
+
+    int option = inputOption(charCount + 1);
+    if (option == (charCount + 1))
+    {
+        charMenu();
+    }
+    else
+    {
+        charEditMenu(characterManager.charactersList[option]);
+    }
+
+}
+
+static void charEditMenu(playerCharacter character)
+{
+
 }
 
 #endregion
@@ -539,6 +609,35 @@ static void optionsTxtColorMenu()
 }
 
 #endregion
+
+#endregion
+
+#region Internet
+
+static async void checkInternetConnection()
+{
+    //If could not reach Google assume no stable internet connection
+    HttpClient client = new HttpClient();
+    try
+    {
+        using (client)
+        {
+            HttpResponseMessage response = await client.GetAsync("https://www.google.com");
+            if (response.IsSuccessStatusCode == false)
+            {
+                GLOBAL.internetConnection = false;
+            }
+            else
+            {
+                GLOBAL.internetConnection = true;
+            }
+        }
+    }
+    catch
+    {
+        GLOBAL.internetConnection = false;
+    }
+}
 
 #endregion
 

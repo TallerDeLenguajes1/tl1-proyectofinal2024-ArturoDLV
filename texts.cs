@@ -41,7 +41,19 @@ namespace namespaceTexts
 
         public static string? customchar {get; set;}
         public static string? randomchar {get; set;}
+        public static string? explainrandomchar {get; set;}
+        public static string? validrandomchar {get; set;}
+        public static string? succesrandomchar {get; set;}
         public static string? browsechars {get; set;}
+        public static string? explainbrwose {get; set;}
+        public static string? charname {get; set;}
+        public static string? charvictories {get; set;}
+        public static string? charclass {get; set;}
+        public static string? charlevel {get; set;}
+        public static string? charscout {get; set;}
+        public static string? charrogue {get; set;}
+        public static string? charknight {get; set;}
+        public static string? charbarbarian {get; set;}
 
         #endregion
 
@@ -119,7 +131,19 @@ namespace namespaceTexts
 
         public string? customchar {get; set;}
         public string? randomchar {get; set;}
+        public string? explainrandomchar {get; set;}
+        public string? validrandomchar {get; set;}
+        public string? succesrandomchar {get; set;}
         public string? browsechars {get; set;}
+        public string? explainbrwose {get; set;}
+        public string? charname {get; set;}
+        public string? charvictories {get; set;}
+        public string? charclass {get; set;}
+        public string? charlevel {get; set;}
+        public string? charscout {get; set;}
+        public string? charrogue {get; set;}
+        public string? charknight {get; set;}
+        public string? charbarbarian {get; set;}
 
         #endregion
 

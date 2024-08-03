@@ -20,6 +20,8 @@ namespace namespaceGlobal
         public const string locFolder = "Localization";
         public const string locSp = (locFolder + "/sp.json");
         public const string locEn = (locFolder + "/en.json");
+
+        #region Sounds
         public const string sndFolder = "Sounds";
         public const string fxFolder = (sndFolder + "/Effects");
         public const string musFolder = (sndFolder + "/Music");
@@ -34,7 +36,11 @@ namespace namespaceGlobal
         public const string fxError = (fxFolder + "/error.wav");
         public const string fxSelect = (fxFolder + "/click.wav");
         public const string fxOff = (fxFolder + "/off.wav");
+        #endregion
 
+        public const string charFolder = "Characters";
+        public const string charIndex = (charFolder + "/index.txt");
+        
         #endregion
 
         #endregion
@@ -42,6 +48,7 @@ namespace namespaceGlobal
         #region Variables
 
         public static string locCurrentLanguage = locSp;
+        public static bool internetConnection = false;
         public static float dmgAdjust = 500;
         public static ConsoleColor textColor = ConsoleColor.DarkGreen;
 
@@ -135,6 +142,22 @@ namespace namespaceGlobal
             }
 
             #endregion
+
+        }
+
+        #endregion
+
+        #region Character Creation
+
+        public static class charCreation
+        {
+
+            public const double pointsGiven = 30;
+            public const double hpCost = 0.1;
+            public const double spdCost = 1;
+            public const double dexCost = 2;
+            public const double strCost = 1;
+            public const double armorCost = 1;
 
         }
 

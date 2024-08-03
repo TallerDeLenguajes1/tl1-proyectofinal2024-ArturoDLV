@@ -107,7 +107,7 @@ Cabe aclarar que muchas decisiones fueron tomadas con una gran inspiracion en el
 
 #### [`Volver atras`](#sub-indice)
 
-- <u>**CLASES**:</u> La consigna no da ningun detalle sobre las clases, y bajo su mirada tan solo es un dato arbitrario y sin uso. Por esto mismo he armado *4 clases distintivas*, y cada una tiene sus particularidades, reflejadas en sus *estadisticas* y su *subida de nivel*. La clase puede ser elegida directamente en la creacion de personaje, o asignada automaticamente dependiendo de los atributos seleccionados. Las clases que se han añadido son:
+- <u>**Clases**:</u> La consigna no da ningun detalle sobre las clases, y bajo su mirada tan solo es un dato arbitrario y sin uso. Por esto mismo he armado *4 clases distintivas*, y cada una tiene sus particularidades, reflejadas en sus *estadisticas* y su *subida de nivel*. La clase puede ser elegida directamente en la creacion de personaje, o asignada automaticamente dependiendo de los atributos seleccionados. Las clases que se han añadido son:
     1. **El Barbaro**: Fuerza bruta con poca o nada durabilidad. Es la epitomia del dicho "La mejor defensa es una buena ofensa".
     2. **El Caballero**: Con gran armadura y buena habilidad con las armas, es un peleador resistente y formidable, pero su armadura lo hace lento y poco flexible.
     3. **El explorador**: Rapido y elusivo, el explorador tratara de atacar sin ser visto, y constantemente se movera alrededor de su enemigo, pero cuidado, un solo golpe podria ser letal.
@@ -115,9 +115,13 @@ Cabe aclarar que muchas decisiones fueron tomadas con una gran inspiracion en el
 	
 > **PD**: *Tener una propiedad llamada "clase", en ingles "class", complica la syntaxis en un lenguaje de programacion donde "class" es una palabra reservada y usada frecuentemente.*
 
-- <u>**NIVELES**</u>: La consigna unicamente menciona a los niveles como una manera para calcular el daño y nada mas, ni siquiera se menciona una manera de modificar este valor, por lo que he cambiado esta mecanica para darle sentido.
+- <u>**Niveles**</u>: La consigna unicamente menciona a los niveles como una manera para calcular el daño y nada mas, ni siquiera se menciona una manera de modificar este valor, por lo que he cambiado esta mecanica para darle sentido.
     - **Como subir de nivel**: Ganar una pelea aumenta la experiencia en 1 punto, perder una pelea lo reduce en 1 *(estos valores pueden ser modificados independientemente)*. Al llegar a cierta cantidad de experiencia, el personaje sube de nivel, y aumenta la cantidad necesaria de experiencia para el proximo nivel.
     - **Al subir de nivel**: Cuando un personaje sube de nivel aumenta 2 *(valor modificable)* estadisticas de las siguientes: **Velocidad-Destreza-Fuerza-Armadura**, y tambien aumenta su vida. Tanto las cantidades como la probabilidad de elegir entre una u otra estadistica depende directamente de la clase elegida o asignada *(todos los valores pueden ser modificados)*.
+
+- <u>**Creacion**</u>: Los personajes pueden ser creados por dos metodos, pero en ambos deben respetar un sistema de puntos: Cada estadistica incrementada luego del minimo cuesta puntos, y con una cantidad limitada de puntos, significa que los personajes tienen siempre una base identica de poder. Los metodos de creacion son los siguiente:
+    1. **Aleatoria**: Se puede crear una cantida X de personajes aleatorios, con estadisticas elegidas al azar, pero respetando el sistema de puntos. Las clases en este caso son asignadas de forma representativa a las estadisticas obtenidas. Tanto el nombre como el apodo son elegidos aleatoreamente a travez de una API que entrega *personas* al azar de una base de datos enorme; en caso de no tener conexion a internet, el nombre siempre sera el mismo para todos los personajes creados aleatoreamente.
+    2. **Personalizado**: El jugador puede crear su propio personaje a medida, eligiendo todo aspecto del mismo, pero con respecto a las estadisticas tambien tendra que respetar el sistema de puntos.
 
 ### Sobre el combate
 
@@ -152,15 +156,16 @@ Aqui se detallan las caracteristicas del codigo producido, las normas seguidas, 
 
 ### <u>Sub-Indice</u>
 
-1. [`Datos Generales`](#datos-generales)
-2. [`Archivo: tl1-proyectofinal2024-ArturoDLV.csproj`](#archivo-tl1-proyectofinal2024-arturodlvcsproj)
-3. [`Librerias usadas`](#librerias-usadas)
-4. [`Archivo: Program.cs`](#archivo-programcs)
-5. [`Archivo: global.cs`](#archivo-globalcs)
-6. [`Archivo: character.cs`](#archivo-charactercs)
-7. [`Archivos para la muestra de los textos`](#archivos-para-la-muestra-de-los-textos)
-8. [`Archivo: sound_manager.cs`](#archivo-sound_managercs)
-9. [`Archivo: config_manager.cs`](#archivo-config_managercs)
+01. [`Datos Generales`](#datos-generales)
+02. [`Archivo: tl1-proyectofinal2024-ArturoDLV.csproj`](#archivo-tl1-proyectofinal2024-arturodlvcsproj)
+03. [`Librerias usadas`](#librerias-usadas)
+04. [`Archivo: Program.cs`](#archivo-programcs)
+05. [`Archivo: global.cs`](#archivo-globalcs)
+06. [`Archivo: character.cs`](#archivo-charactercs)
+07. [`Archivos para la muestra de los textos`](#archivos-para-la-muestra-de-los-textos)
+08. [`Archivo: sound_manager.cs`](#archivo-sound_managercs)
+09. [`Archivo: config_manager.cs`](#archivo-config_managercs)
+10. [`Archivos de guardado de personajes`](#archivos-de-guardado-de-personajes)
 
 ---
 
@@ -188,7 +193,7 @@ Aqui se detallan las caracteristicas del codigo producido, las normas seguidas, 
 
 En este proyecto se usaron 2 librerias para el uso de ciertas caracteristicas de forma eficiente, estas son:
 1. [`NAudio`](https://github.com/naudio/NAudio): Permite el procesamiento de pistas de audio en diferentes *threads* de manera tal que se puede reproducir dichos audios independientemente del estado en cual se encuentre la logica principal del programa.
-2. [IniParser](https://www.nuget.org/packages/ini-parser): Permite el procesamiento de los archivos **.ini** para su uso en el programa. Brinda funciones de lectura y escritura.
+2. [`IniParser`](https://www.nuget.org/packages/ini-parser): Permite el procesamiento de los archivos **.ini** para su uso en el programa. Brinda funciones de lectura y escritura.
 
 ### Archivo: tl1-proyectofinal2024-ArturoDLV.csproj
 
@@ -253,6 +258,19 @@ En este archivo se maneja todo el procesamiento del audio, por medio de la libre
 [`Archivo`](config_manager.cs)
 
 Este archivo es el encargado del guardado y lectura de las opciones de usuario.
+
+### Archivos de guardado de personajes
+
+#### [`Volver atras`](#sub-indice-1)
+
+[`Carpeta`](Characters)
+[`Archivo de listado`](Characters/index.txt)
+
+El sistema de guardado de informacion de los personajes funciona de la siguiente manera:
+A cada personaje le corresponde un archivo **.JSON** el cual contiene su informacion. El nombre de este archivo es su ID unica, que se forma a travez del uso de **Guid**s que generan secuencia de caracteres unicos.
+Luego, el archivo de listado **index.txt** contiene la ID de todos los personajes creados, uno por linea. Cuando se inicia el programa, primero se chequea que por cada ID en el indice existe un archivo **.JSON** correspondiente, y si es asi, se carga ese personaje a la lista dinamica de personajes del programa.
+
+Decidi usar este metodo por la facilidad logica y eficiencia de recursos que provee, ya que organizar todos los personajes en un unico archivo masivo lo haria tedioso, dificil de cargar, y mas problematico que todo, muy duro de editar sin sobrescribir todo.
 
 
 ## <u>Detalles del ordenador</u>

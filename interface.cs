@@ -1,5 +1,6 @@
 using namespaceGlobal;
 using namespaceTexts;
+using namespaceCharacter;
 using System.Text;
 
 namespace namespaceGUI
@@ -51,7 +52,7 @@ namespace namespaceGUI
 
         public static void makeInput()
         {
-            Console.Write(TXT.makeinput);
+            Console.Write(" " + TXT.makeinput);
         }
 
         public static void inputNumber()
@@ -123,6 +124,84 @@ namespace namespaceGUI
             Console.WriteLine(" 3: " + TXT.browsechars);
             Console.WriteLine(" 4: " + TXT.goback);
             horLines();
+        }
+
+        public static void charRmdMenu()
+        {
+            refresh();
+            Console.WriteLine("\n " + TXT.characters);
+            Console.WriteLine(" " + TXT.randomchar);
+            horLines();
+            Console.WriteLine(" " + TXT.explainrandomchar);
+            Console.WriteLine(" " + TXT.validrandomchar);
+            horLines();
+        }
+
+        public static void charSuccesRdm()
+        {
+            horLines();
+            Console.WriteLine("\n " + TXT.succesrandomchar);
+            horLines();
+        }
+
+        public static void charBrowseMenu()
+        {
+            refresh();
+            Console.WriteLine("\n " + TXT.characters);
+            Console.WriteLine(" " + TXT.explainbrwose + "\n");
+        }
+
+        public static void charListItem(int item,playerCharacter character)
+        {
+            string characterString = (" " + (item + 1).ToString() + "| ");
+            characterString += (TXT.charname + ": " + character.cName);
+            while (characterString.Length < 40) {characterString += " ";}
+            characterString += ("| " + TXT.charvictories + ": " + character.VICTORIES);
+            while (characterString.Length < 60) {characterString += " ";}
+            characterString += ("| " + TXT.charclass + ": " + classToText(character.CLASS));
+            while (characterString.Length < 85) {characterString += " ";}
+            characterString += ("| " + TXT.charlevel + ": " + character.LEVEL);
+
+            horLines();
+            Console.WriteLine(characterString);
+        }
+
+        private static string classToText(string _class)
+        {
+            string text = "";
+
+            switch(_class)
+            {
+                case "Scout":
+                {
+                    text = TXT.charscout;
+                    break;
+                }
+                case "Rogue":
+                {
+                    text = TXT.charrogue;
+                    break;
+                }
+                case "Knight":
+                {
+                    text = TXT.charknight;
+                    break;
+                }
+                case "Barbarian":
+                {
+                    text = TXT.charbarbarian;
+                    break;
+                }
+            }
+
+            return text;
+        }
+
+        public static void charEndBrowse(int item)
+        {
+            horLines();
+            horLines();
+            Console.WriteLine(" " + item.ToString() + ": " + TXT.goback + "\n");
         }
 
         #endregion
