@@ -47,6 +47,7 @@ namespace namespaceGlobal
 
         #region Variables
 
+        public static string menuState = "mainMenu";
         public static string locCurrentLanguage = locSp;
         public static bool internetConnection = false;
         public static float dmgAdjust = 500;

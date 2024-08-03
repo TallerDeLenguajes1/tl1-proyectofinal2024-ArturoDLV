@@ -23,7 +23,7 @@ GUI.iniConsole();
 sndManager.iniMusic();
 sndManager.iniFx();
 characterManager.iniCharcters();
-mainMenu();
+menuHandler();
 
 #endregion
 
@@ -235,6 +235,8 @@ static void locLoad(string file)
 
 #region Menus
 
+#region Menu Handling
+
 static int inputOption(int optionsCount)
 {
     bool check = false;
@@ -294,6 +296,119 @@ static string getString()
     return str;
 }
 
+static void menuHandler()
+{
+    while (true)
+    {
+        switch(GLOBAL.menuState)
+        {
+            case "mainMenu":
+            {
+                mainMenu();
+                break;
+            }
+
+            #region Play
+
+            case "playMenu":
+            {
+                playMenu();
+                break;
+            }
+            case "playTournamentMenu":
+            {
+                playTournamentMenu();
+                break;
+            }
+            case "playOVOMenu":
+            {
+                playOVOMenu();
+                break;
+            }
+            case "playFFAMenu":
+            {
+                playFFAMenu();
+                break;
+            }
+
+            #endregion
+
+            #region Characters
+
+            case "charMenu":
+            {
+                charMenu();
+                break;
+            }
+            case "charCustomMenu":
+            {
+                charCustomMenu();
+                break;
+            }
+            case "charRandomMenu":
+            {
+                charRandomMenu();
+                break;
+            }
+            case "charBrowseMenu":
+            {
+                int listIndex = charBrowseMenu();
+                if (listIndex != -1)
+                {
+                    do
+                    {
+                        listIndex = charEditMenu(listIndex,characterManager.charactersList[listIndex]);
+                    } while (listIndex != -1);
+                }
+                break;
+            }
+            case "resetCharactersMenu":
+            {
+                resetCharactersMenu();
+                break;
+            }
+
+            #endregion
+
+            #region Options
+
+            case "optionsMenu":
+            {
+                optionsMenu();
+                break;
+            }
+            case "optionsLanguageChange":
+            {
+                optionsLanguageChange();
+                break;
+            }
+            case "optionsDmgAdjMenu":
+            {
+                optionsDmgAdjMenu();
+                break;
+            }
+            case "optionsAttPLvlMenu":
+            {
+                optionsAttPLvlMenu();
+                break;
+            }
+            case "optionsTxtColorMenu":
+            {
+                optionsTxtColorMenu();
+                break;
+            }
+
+            #endregion
+
+            default:
+            {
+                mainMenu();
+                break;
+            }
+        }
+    }
+}
+
 static void mainMenu()
 {
    
@@ -303,17 +418,17 @@ static void mainMenu()
     {
         case 1:
         {
-            playMenu();
+            GLOBAL.menuState = "playMenu";
             break;
         }
         case 2:
         {
-            charMenu();
+            GLOBAL.menuState = "charMenu";
             break;
         }
         case 3:
         {
-            optionsMenu();
+            GLOBAL.menuState = "optionsMenu";
             break;
         }
         case 4:
@@ -330,6 +445,8 @@ static void mainMenu()
 
 }
 
+#endregion
+
 #region Play
 
 static void playMenu()
@@ -341,22 +458,22 @@ static void playMenu()
     {
         case 1:
         {
-            playTournamentMenu();
+            GLOBAL.menuState = "playTournamentMenu";
             break;
         }
         case 2:
         {
-            playOVOMenu();
+            GLOBAL.menuState = "playOVOMenu";
             break;
         }
         case 3:
         {
-            playFFAMenu();
+            GLOBAL.menuState = "playFFAMenu";
             break;
         }
         case 4:
         {
-            mainMenu();
+            GLOBAL.menuState = "mainMenu";
             break;
         }
     }
@@ -391,27 +508,27 @@ static void charMenu()
     {
         case 1:
         {
-            charCustomMenu();
+            GLOBAL.menuState = "charCustomMenu";
             break;
         }
         case 2:
         {
-            charRandomMenu();
+            GLOBAL.menuState = "charRandomMenu";
             break;
         }
         case 3:
         {
-            charBrowseMenu();
+            GLOBAL.menuState = "charBrowseMenu";
             break;
         }
         case 4:
         {
-            resetCharactersMenu();
+            GLOBAL.menuState = "resetCharactersMenu";
             break;
         }
         case 5:
         {
-            mainMenu();
+            GLOBAL.menuState = "mainMenu";
             break;
         }
     }
@@ -434,7 +551,7 @@ static void charCustomMenu()
     {
         case 4:
         {
-            charMenu();
+            GLOBAL.menuState = "charMenu";
             break;
         }
     }
@@ -447,10 +564,10 @@ static void charRandomMenu()
     characterManager.makeRmdChar(count);
     GUI.charSuccesRdm();
     Console.ReadLine();
-    charMenu();
+    GLOBAL.menuState = "charMenu";
 }
 
-static void charBrowseMenu()
+static int charBrowseMenu()
 {
 
     if (characterManager.charactersList.Count >= 1)
@@ -468,11 +585,12 @@ static void charBrowseMenu()
         int option = inputOption(charCount + 1);
         if (option == (charCount + 1))
         {
-            charMenu();
+            GLOBAL.menuState = "charMenu";
+            return -1;
         }
         else
         {
-            charEditMenu((option - 1),characterManager.charactersList[option - 1]);
+            return (option - 1);
         }
 
     }
@@ -480,12 +598,13 @@ static void charBrowseMenu()
     {
         GUI.charNoCharacters();
         Console.ReadLine();
-        charMenu();
+        GLOBAL.menuState = "charMenu";
+        return -1;
     }
 
 }
 
-static void charEditMenu(int item, playerCharacter character)
+static int charEditMenu(int item, playerCharacter character)
 {
     GUI.charShowInfo(item,character);
     GUI.charEditMenu();
@@ -499,8 +618,8 @@ static void charEditMenu(int item, playerCharacter character)
             string name = getName();
             character.cName = name;
             character.saveChar(false);
-            charEditMenu(item,character);
-            break;
+            GLOBAL.menuState = "charEditMenu";
+            return item;
         }
         case 2:
         {
@@ -508,8 +627,8 @@ static void charEditMenu(int item, playerCharacter character)
             string nick = getName();
             character.cNickname = nick;
             character.saveChar(false);
-            charEditMenu(item,character);
-            break;
+            GLOBAL.menuState = "charEditMenu";
+            return item;
         }
         case 3:
         {
@@ -520,20 +639,22 @@ static void charEditMenu(int item, playerCharacter character)
                 character = null;
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-                charBrowseMenu();
+                GLOBAL.menuState = "charBrowseMenu";
+                return -1;
             }
             else
             {
-                charEditMenu(item,character);
+                GLOBAL.menuState = "charEditMenu";
+                return item;
             }
-            break;
         }
         case 4:
         {
-            charBrowseMenu();
-            break;
+            GLOBAL.menuState = "charBrowseMenu";
+            return -1;
         }
     }
+    return -1;
 }
 
 static string getName()
@@ -566,13 +687,14 @@ static void resetCharactersMenu()
         {
             characterManager.resetCharacters();
         }
-        charMenu();
+        GLOBAL.menuState = "charMenu";
+        return;
     }
     else
     {
         GUI.charNoCharacters();
         Console.ReadLine();
-        charMenu();
+        GLOBAL.menuState = "charMenu";
     }
 }
 
@@ -589,27 +711,27 @@ static void optionsMenu()
     {
         case 1:
         {
-            optionsLanguageChange();
+            GLOBAL.menuState = "optionsLanguageChange";
             break;
         }
         case 2:
         {
-            optionsDmgAdjMenu();
+            GLOBAL.menuState = "optionsDmgAdjMenu";
             break;
         }
         case 3:
         {
-            optionsAttPLvlMenu();
+            GLOBAL.menuState = "optionsAttPLvlMenu";
             break;
         }
         case 4:
         {
-            optionsTxtColorMenu();
+            GLOBAL.menuState = "optionsTxtColorMenu";
             break;
         }
         case 5:
         {
-            mainMenu();
+            GLOBAL.menuState = "mainMenu";
             break;
         }
     }
@@ -629,7 +751,7 @@ static void optionsLanguageChange()
 
     configIni.saveData("locCurrentLanguage",GLOBAL.locCurrentLanguage);
     locLoad(GLOBAL.locCurrentLanguage);
-    optionsMenu();
+    GLOBAL.menuState = "optionsMenu";
 }
 
 static void optionsDmgAdjMenu()
@@ -637,7 +759,7 @@ static void optionsDmgAdjMenu()
     GUI.changeDmgAdj();
     GLOBAL.dmgAdjust = getValidDmgAdj();
     configIni.saveData("dmgAdjust",GLOBAL.dmgAdjust.ToString());
-    optionsMenu();
+    GLOBAL.menuState = "optionsMenu";
 }
 
 static float getValidDmgAdj()
@@ -678,7 +800,7 @@ static void optionsAttPLvlMenu()
     GUI.changeAttPLvl();
     GLOBAL.LVLUP.attributesPerLevel = inputOption(10);
     configIni.saveData("attributesPerLevel",GLOBAL.LVLUP.attributesPerLevel.ToString());
-    optionsMenu();
+    GLOBAL.menuState = "optionsMenu";
 }
 
 static void optionsTxtColorMenu()
@@ -691,89 +813,89 @@ static void optionsTxtColorMenu()
         {
             Console.ForegroundColor = ConsoleColor.White;
             configIni.saveData("textColor","white");
-            optionsTxtColorMenu();
+            GLOBAL.menuState = "optionsTxtColorMenu";
             break;
         }
         case 2:
         {
             Console.ForegroundColor = ConsoleColor.Green;
             configIni.saveData("textColor","green");
-            optionsTxtColorMenu();
+            GLOBAL.menuState = "optionsTxtColorMenu";
             break;
         }
         case 3:
         {
             Console.ForegroundColor = ConsoleColor.Red;
             configIni.saveData("textColor","red");
-            optionsTxtColorMenu();
+            GLOBAL.menuState = "optionsTxtColorMenu";
             break;
         }
         case 4:
         {
             Console.ForegroundColor = ConsoleColor.Blue;
             configIni.saveData("textColor","blue");
-            optionsTxtColorMenu();
+            GLOBAL.menuState = "optionsTxtColorMenu";
             break;
         }
         case 5:
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             configIni.saveData("textColor","yellow");
-            optionsTxtColorMenu();
+            GLOBAL.menuState = "optionsTxtColorMenu";
             break;
         }
         case 6:
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
             configIni.saveData("textColor","cyan");
-            optionsTxtColorMenu();
+            GLOBAL.menuState = "optionsTxtColorMenu";
             break;
         }
         case 7:
         {
             Console.ForegroundColor = ConsoleColor.Magenta;
             configIni.saveData("textColor","magenta");
-            optionsTxtColorMenu();
+            GLOBAL.menuState = "optionsTxtColorMenu";
             break;
         }
         case 8:
         {
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             configIni.saveData("textColor","dkgreen");
-            optionsTxtColorMenu();
+            GLOBAL.menuState = "optionsTxtColorMenu";
             break;
         }
         case 9:
         {
             Console.ForegroundColor = ConsoleColor.DarkRed;
             configIni.saveData("textColor","dkred");
-            optionsTxtColorMenu();
+            GLOBAL.menuState = "optionsTxtColorMenu";
             break;
         }
         case 10:
         {
             Console.ForegroundColor = ConsoleColor.DarkBlue;
             configIni.saveData("textColor","dkblue");
-            optionsTxtColorMenu();
+            GLOBAL.menuState = "optionsTxtColorMenu";
             break;
         }
         case 11:
         {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             configIni.saveData("textColor","dkyellow");
-            optionsTxtColorMenu();
+            GLOBAL.menuState = "optionsTxtColorMenu";
             break;
         }
         case 12:
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             configIni.saveData("textColor","dkcyan");
-            optionsTxtColorMenu();
+            GLOBAL.menuState = "optionsTxtColorMenu";
             break;
         }
         case 13:
         {
-            optionsMenu();
+            GLOBAL.menuState = "optionsMenu";
             break;
         }
     }
