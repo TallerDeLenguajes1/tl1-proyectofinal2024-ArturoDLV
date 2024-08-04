@@ -44,7 +44,7 @@ Crear un videojuego de combates por turnos que comparte características con jue
     - Arquitectura: x64
     - Fecha de Instalacion: 10/04/2024
     - Extensiones Notables:
-        - .NET Install Toll v2.1.1
+        - .NET Install Tool v2.1.1
         - C# v2.39.29
         - CMake Tools v1.18.44
 		
@@ -127,7 +127,13 @@ Cabe aclarar que muchas decisiones fueron tomadas con una gran inspiracion en el
 
 #### [`Volver atras`](#sub-indice)
 
+- <u>**Iniciar combate**</u>: Se seleccionan dos personajes para combatir de la lista de personajes existentes, si no hay suficientes personajes *(minimo 2)* se redireccionara al menu de personajes para crear mas. Una vez seleccionados el jugar puede empezar el combate.
+
 - <u>**Iniciativa**</u>: En vez de dejar al azar quien va primero en un turno, he implementado un sistema por el cual la velocidad y destreza tienen un impacto considerable en esto, aunque aun permite una pequeña cantidad de azar. Antes de iniciar un combate, los personajes comparan iniciativa, y aquel que tenga un mayor numero atacara primero. En caso de tener iniciativas similares, entra en juego el azar.
+
+- <u>**Turnos**</u>: Cada turno, un personaje ataque y el otro recibe el daño. El jugador pasa de turno a turno presionando ENTER. Si en un turno dado uno de los personajes es reducido a menos de 0 puntos de vida, este pierde y el otro gana el combate.
+
+- <u>**Fin del combate**</u>: Al terminar el combate, se le da la oportunidad al jugador de *matar* al perdedor, lo cual funciona a manera de una eliminacion de los datos del personaje pero dramatizada. El jugador victorioso aumenta en el ranking, gana experiencia, y si amerita, sube de nivel.
 
 ### Sonido
 
@@ -201,7 +207,11 @@ En este proyecto se usaron 2 librerias para el uso de ciertas caracteristicas de
 
 [`Archivo`](tl1-proyectofinal2024-ArturoDLV.csproj)
 
-Este es el archivo general del proyecto. Añadi una pequeña seccion para que ciertos archivos siempre esten disponibles, aun cuando se hace una compilacion y wrap de la aplicacion.
+Este es el archivo general del proyecto.
+- Añadí una pequeña seccion para que ciertos archivos siempre esten disponibles, aun cuando se hace una compilacion y wrap de la aplicacion, ya que son archivos necesarios para la ejecucion del programa.
+- Añadi un icono para que la aplicacion muestre uno.
+- Hice que la aplicacion permita bloques de codigo **unsafe** para poder usar punteros. Sin embargo, el uso de punteros lo limite a la parte principal del programa, y en algunas funciones particulares, ya que solucionar el problema que necesitaba era mucho mas sencillo con logica de punteros.
+- Se añadieron las librerias aqui para su uso en el programa.
 
 ### Archivo: Program.cs
 
@@ -210,6 +220,8 @@ Este es el archivo general del proyecto. Añadi una pequeña seccion para que ci
 [`Archivo`](Program.cs)
 
 Este es el archivo principal del programa.
+Se encarga de verificar la estabilidad de los archivos que la aplicacion requiere para funcionar, de inicializar los estados y valores iniciales y de cargar todo archivo que lo necesite.
+Una vez hecho esto, entra en el bucle principal de navegacion de los menus y se mantiene en este hasta el fin de la aplicacion.
 
 ### Archivo: global.cs
 
@@ -227,6 +239,8 @@ En este archivo se encuentra una clase estatica que provee a todo el codigo de v
 
 En este archivo se encuentra la clase usada para todos los personajes, y sus metodos e interacciones.
 Puntos notables:
+- <u>**Clase dummy**:</u> Queria que aquellas propiedas que deberian mantenerse estables a lo largo del curso del juego sean privadas y dificil de modificar si no es por metodos avalados por la clase de personajes. Por esto mismo, utilizo una clase *dummy* que solo sirve para cargar datos en esta y manipularlos, pero nunca para ser usada en los lugares donde de hecho se requiere un personaje funcional.
+- <u>**Lista de personajes**:</u> Todos los personajes que se cargan, crean o eliminan del juego, estan presentes en una lista estatica para que se pueda acceder a todos los personajes disponibles.
 - <u>**Daño**:</u> Hacer y recibir daño son metodos separados, esta decision de diseño la tome ya que considero que son acciones que deben ser manejadas por su respectivo objeto; es decir, no creo que sea adecuado que una instancia cambie directamente los valores de otra. Ademas, esto permite implementaciones como ataques en area, o multiples enemigos atacando a un solo objetivo.
 
 ### Archivos para la muestra de los textos
@@ -258,6 +272,13 @@ En este archivo se maneja todo el procesamiento del audio, por medio de la libre
 [`Archivo`](config_manager.cs)
 
 Este archivo es el encargado del guardado y lectura de las opciones de usuario.
+Las mismas son:
+- Lenguaje.
+- Variable de ajuste de daño.
+- Variable de aumento de estadisticas por nivel.
+- Color del texto de la consola.
+
+La logica esta hecha de tal manera que seria sencillo añadir otras opciones para ser guardadas de ser necesario.
 
 ### Archivos de guardado de personajes
 
@@ -270,7 +291,7 @@ El sistema de guardado de informacion de los personajes funciona de la siguiente
 A cada personaje le corresponde un archivo **.JSON** el cual contiene su informacion. El nombre de este archivo es su ID unica, que se forma a travez del uso de **Guid**s que generan secuencia de caracteres unicos.
 Luego, el archivo de listado **index.txt** contiene la ID de todos los personajes creados, uno por linea. Cuando se inicia el programa, primero se chequea que por cada ID en el indice existe un archivo **.JSON** correspondiente, y si es asi, se carga ese personaje a la lista dinamica de personajes del programa.
 
-Decidi usar este metodo por la facilidad logica y eficiencia de recursos que provee, ya que organizar todos los personajes en un unico archivo masivo lo haria tedioso, dificil de cargar, y mas problematico que todo, muy duro de editar sin sobrescribir todo.
+Decidi usar este metodo por la facilidad logica y eficiencia de recursos que provee, ya que organizar todos los personajes en un unico archivo masivo lo haria tedioso, dificil de cargar, y no se podria editar sin sobrescribir el archivo entero cada vez.
 
 
 ## <u>Detalles del ordenador</u>

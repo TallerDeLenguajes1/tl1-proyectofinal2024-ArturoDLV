@@ -52,7 +52,7 @@ namespace namespaceGUI
 
         public static void makeInput()
         {
-            Console.Write(" " + TXT.makeinput + ": ");
+            Console.Write("\n " + TXT.makeinput + ": ");
         }
 
         public static void inputNumber()
@@ -62,14 +62,18 @@ namespace namespaceGUI
 
         public static void NaNinput()
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             horLines();
             Console.WriteLine(" " + TXT.naninput);
+            Console.ForegroundColor = GLOBAL.textColor;
         }
 
         public static void outOfRangeInput()
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             horLines();
             Console.WriteLine(" " + TXT.outofrange);
+            Console.ForegroundColor = GLOBAL.textColor;
         }
 
         public static void inputString()
@@ -79,14 +83,18 @@ namespace namespaceGUI
 
         public static void invalidString()
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             horLines();
             Console.WriteLine(" " + TXT.invalidstring);
+            Console.ForegroundColor = GLOBAL.textColor;
         }
 
         public static void invalidName()
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             horLines();
             Console.WriteLine(" " + TXT.invaliname);
+            Console.ForegroundColor = GLOBAL.textColor;
         }
 
         public static void tutorial()
@@ -115,16 +123,147 @@ namespace namespaceGUI
 
         #region Play
 
-        public static void playMenu()
+        public static void playMenu(bool isFirst)
+        {
+            string player = "";
+            if (isFirst == true) {player = TXT.selectplayer1;} else {player = TXT.selectplayer2;}
+
+            refresh();
+            Console.WriteLine("\n " + TXT.play);
+            Console.WriteLine(" " + TXT.oneVone);
+            horLines();
+            Console.WriteLine("\n ----- " + player + " -----");
+            horLines();
+            Console.WriteLine(" ");
+        }
+
+        public static void playAlreadySelected()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            horLines();
+            Console.WriteLine(" " + TXT.alreadyselect);
+            Console.ForegroundColor = GLOBAL.textColor;
+        }
+
+        public static void playStartCombat(playerCharacter player1, playerCharacter player2)
         {
             refresh();
             Console.WriteLine("\n " + TXT.play);
-            tutorial();
-            Console.WriteLine("\n 1: " + TXT.tournament);
-            Console.WriteLine(" 2: " + TXT.oneVone);
-            Console.WriteLine(" 3: " + TXT.freeforall);
-            Console.WriteLine(" 4: " + TXT.goback);
+            Console.WriteLine(" " + TXT.oneVone);
             horLines();
+            charListItem(0,player1);
+            horLines();
+            Console.WriteLine("\n                                      ---------- " + TXT.against + " ----------\n");
+            charListItem(1,player2);
+            horLines();
+            horLines();
+            Console.WriteLine("\n");
+            horLines();
+            Console.WriteLine("\n 1: " + TXT.fight);
+            Console.WriteLine(" 2: " + TXT.exit);
+            horLines();
+        }
+
+        public static void combatTurn(playerCharacter player1, playerCharacter player2, int turnOrder)
+        {
+            Console.Clear();
+
+            bool attacked = false;
+            horLines();
+            if (turnOrder == 2) {Console.WriteLine("\n | " + TXT.defends + ": ");} else {Console.WriteLine("\n | " + TXT.attacks + ": ");}
+            Console.WriteLine(" | " + player1.cName);
+            if (turnOrder == 2) {attacked = true;}
+            hpBar(player1.cCurrenthp,player1.MAX_HP,attacked);
+            attacked = false;
+
+            horLines();
+            ASCIISword();
+            horLines();
+
+            if (turnOrder == 1) {Console.WriteLine("\n | " + TXT.defends + ": ");} else {Console.WriteLine("\n | " + TXT.attacks + ": ");}
+            Console.WriteLine(" | " + player2.cName);
+            if (turnOrder == 1) {attacked = true;}
+            hpBar(player2.cCurrenthp,player2.MAX_HP,attacked);
+            horLines();
+
+            Console.WriteLine("\n " + TXT.combatcontinue);
+        }
+
+        public static void hpBar(float hp, float maxhp, bool attacked)
+        {
+            int percentage = 100;
+            percentage = (int)Math.Round((hp/maxhp)*100);
+
+            Console.Write("\n |HP: |");
+            for (int i = 0; i < 100; i++)
+            {
+                if (i > percentage)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                }
+                else
+                {
+                    if (attacked == true)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                    }
+                }
+                Console.Write(":");
+            }
+            Console.ForegroundColor = GLOBAL.textColor;
+            Console.Write("|\n");
+        }
+
+        public static void ASCIISword()
+        {
+            Console.WriteLine("\n           /\\                                                 /\\");
+            Console.WriteLine(" _         )( ______________________   ______________________ )(        _");
+            Console.WriteLine("(_ )///////(**)______________________> <______________________(**)\\\\\\\\\\(_)");
+            Console.WriteLine("           )(                                                 )(");
+            Console.WriteLine("           \\/                                                 \\/\n");
+        }
+
+        public static void playWinner(int winnerInt, string player1, string player2)
+        {
+            string winner, looser;
+            if (winnerInt == 1)
+            {
+                winner = player1;
+                looser = player2;
+            }
+            else
+            {
+                winner = player2;
+                looser = player1;
+            }
+
+            refresh();
+            Console.WriteLine("\n " + TXT.play);
+            Console.WriteLine(" " + TXT.oneVone);
+            horLines();
+            Console.WriteLine(" " + TXT.combatwinner + ": " + winner);
+            Console.WriteLine(" " + TXT.combatlooser + ": " + looser);
+            Console.WriteLine("\n " + TXT.killsure);
+            Console.WriteLine(" " + TXT.killexplain);
+            horLines();
+            Console.WriteLine("\n 1: " + TXT.killconfirm);
+            Console.WriteLine(" 2: " + TXT.mercy);
+            horLines();
+        }
+
+        public static void killed()
+        {
+            refresh();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("\n");
+            horLines();
+            Console.WriteLine(" " + TXT.killed);
+            horLines();
+            Console.ForegroundColor = GLOBAL.textColor;
         }
 
         #endregion
@@ -249,6 +388,7 @@ namespace namespaceGUI
             Console.WriteLine(" " + TXT.invalidchar);
             horLines();
         }
+        
         public static void charRmdMenu()
         {
             refresh();
@@ -329,7 +469,7 @@ namespace namespaceGUI
         {
             horLines();
             horLines();
-            Console.WriteLine(" " + item.ToString() + ": " + TXT.goback + "\n");
+            Console.WriteLine("\n " + item.ToString() + ": " + TXT.goback + "\n");
         }
 
         public static void charShowInfo(int item, playerCharacter character)
@@ -416,10 +556,12 @@ namespace namespaceGUI
         public static void charNoCharacters()
         {
             refresh();
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("\n " + TXT.characters + "\n");
             horLines();
             Console.WriteLine(" " + TXT.nocharacters);
             horLines();
+            Console.ForegroundColor = GLOBAL.textColor;
         }
 
         #endregion

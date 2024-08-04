@@ -36,9 +36,9 @@ namespace namespaceCharacter
         #region Physical Attributes
 
         private int cLevel;
-        private int cXp = 0;
+        private float cXp;
         private float cMaxhp;
-        private float cCurrenthp;
+        public float cCurrenthp;
         private int cSpeed;
         private int cStrengh;
         private int cDexterity;
@@ -47,7 +47,7 @@ namespace namespaceCharacter
         #region Getter & Setter
 
         public int LEVEL {get => cLevel;}
-        public int XP {get => cXp;}
+        public float XP {get => cXp;}
         public float MAX_HP {get => cMaxhp;}
         public float CURRENT_HP {get => cCurrenthp; set => cCurrenthp = value;}
         public int SPEED {get => cSpeed;}
@@ -83,12 +83,54 @@ namespace namespaceCharacter
         public void takeDamage(float dmg)
         {
             int defence = (cArmor * cSpeed);
-            dmg = Math.Max((dmg - defence),0);
+            dmg = Math.Max((dmg - defence),100);
             cCurrenthp -= (dmg/GLOBAL.dmgAdjust);
+        }
+
+        public int attackFx()
+        {
+            switch(cClass)
+            {
+                case "Rogue":
+                {
+                    return 4;
+                }
+                case "Knight":
+                {
+                    return 5;
+                }
+                case "Barbarian":
+                {
+                    return 6;
+                }
+                default:
+                {
+                    return 3;
+                }
+            }
+        }
+
+        public void takeVictory()
+        {
+            cVictories ++;
+            cXp += GLOBAL.LVLUP.xpPerVic;
+            if (xpThreshold(cXp,cLevel) == true)
+            {
+                levelUp();
+                cXp = 0;
+            }
+        }
+
+        public void takeLoss()
+        {
+            if ((cXp - GLOBAL.LVLUP.xpPerLos) > 0) {cXp -= GLOBAL.LVLUP.xpPerLos;}
+            cVictories--;
+            saveChar(false);
         }
 
         public void levelUp()
         {
+            cLevel ++;
             for (int i = 0; i < GLOBAL.LVLUP.attributesPerLevel; i++)
             {
                 int attributeChance = GLOBAL.randomGen.Next(0, 101);
@@ -239,6 +281,8 @@ namespace namespaceCharacter
 
                 }
             }
+
+            saveChar(false);
         }
 
         public void saveChar(bool addToIndex)
@@ -266,10 +310,22 @@ namespace namespaceCharacter
             characterManager.charactersList.Remove(this);
         }
 
+        private bool xpThreshold(float xp, int level)
+        {
+            bool levelup = false;
+            double threshold = Math.Round(Math.Pow((double)(level),1.5));
+            if (xp >= threshold)
+            {
+                levelup = true;
+            }
+
+            return levelup;
+        }
+
         #endregion
 
         #region Constructor
-        public playerCharacter(string name, string nick, int age, string _class, float hp, int speed, int str, int dex, int armor, Guid id, int victories)
+        public playerCharacter(string name, string nick, int age, string _class, float hp, int speed, int str, int dex, int armor, Guid id, int victories, int level, float xp)
         {
 
             ID = id;
@@ -277,7 +333,8 @@ namespace namespaceCharacter
             cName = name;
             cNickname = nick;
             cAge = age;
-            cLevel = 1;
+            cLevel = level;
+            cXp = xp;
             cMaxhp = hp;
             cCurrenthp = cMaxhp;
             cSpeed = speed;
@@ -410,7 +467,7 @@ namespace namespaceCharacter
             jsonString = File.ReadAllText(file);
             dummy = JsonSerializer.Deserialize<dummyChar>(jsonString);
             Guid.TryParse(charID, out ID);
-            character = new playerCharacter(dummy.cName,dummy.cNickname,dummy.AGE,dummy.CLASS,dummy.MAX_HP,dummy.SPEED,dummy.STRENGH,dummy.DEXTERITY,dummy.ARMOR,ID,dummy.VICTORIES);
+            character = new playerCharacter(dummy.cName,dummy.cNickname,dummy.AGE,dummy.CLASS,dummy.MAX_HP,dummy.SPEED,dummy.STRENGH,dummy.DEXTERITY,dummy.ARMOR,ID,dummy.VICTORIES,dummy.LEVEL,dummy.XP);
             charactersList.Add(character);
 
         }
@@ -440,7 +497,7 @@ namespace namespaceCharacter
                 int[] stats = assignPoints();
                 string name = (data.info[i].name.title + " " + data.info[i].name.first + " " + data.info[i].name.last);
 
-                playerCharacter character = new playerCharacter(name,data.info[i].nick.nick,age,"",stats[0],stats[1],stats[2],stats[3],stats[4],Guid.NewGuid(),0);
+                playerCharacter character = new playerCharacter(name,data.info[i].nick.nick,age,"",stats[0],stats[1],stats[2],stats[3],stats[4],Guid.NewGuid(),0,1,0);
                 character.saveChar(true);
                 charactersList.Add(character);
             }

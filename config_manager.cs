@@ -15,9 +15,9 @@ namespace namespaceConfig
             IniData data = new IniData();
 
             data["Options"]["locCurrentLanguage"] = GLOBAL.locSp;
-            data["Options"]["dmgAdjust"] = "500";
+            data["Options"]["dmgAdjust"] = "300";
             data["Options"]["attributesPerLevel"] = "2";
-            data["Options"]["textColor"] = "dkgreen";
+            data["Options"]["textColor"] = "cyan";
 
             parser.WriteFile(GLOBAL.configIni,data);
         }

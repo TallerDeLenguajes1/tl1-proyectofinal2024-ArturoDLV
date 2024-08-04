@@ -207,6 +207,36 @@ static DynamicTXT locGetString(string file)
     }
 }
 
+static bool locCheckValues(object value)
+{
+    bool check = false;
+
+    if (value != null)
+    {
+        if (value.GetType() == typeof(string))
+        {
+            if (String.IsNullOrEmpty((string)value) == false)
+            {
+                check = true;
+            }
+            else
+            {
+                showError(true,"Language file has at least one empty textline");
+            }
+        }
+        else
+        {
+            showError(true,"Internal temporal language object not set properly");
+        }
+    }
+    else
+    {
+        showError(true,"Language file lacks at least one textline");
+    }
+
+    return check;
+}
+
 static void locLoad(string file)
 {
     DynamicTXT tempObject = locGetString(file);
@@ -220,7 +250,15 @@ static void locLoad(string file)
             System.Reflection.PropertyInfo staticProperty = staticClassType.GetProperty(property.Name, BindingFlags.Public | BindingFlags.Static);
             if ((staticProperty != null) && (staticProperty.CanWrite == true))
             {
-                staticProperty.SetValue(null, property.GetValue(tempObject));
+                object tempValue = property.GetValue(tempObject);
+                if (locCheckValues(tempValue) == true)
+                {
+                    staticProperty.SetValue(null,tempValue);
+                }
+                else
+                {
+                    showError(true,"Unexpected language related error");
+                }
             }
         }
     }
@@ -240,12 +278,16 @@ static void locLoad(string file)
 static int inputOption(int optionsCount)
 {
     bool check = false;
+    string consoleRead = "";
     int option = 0;
 
     while (check == false)
     {
         GUI.makeInput();
-        bool parse = int.TryParse(Console.ReadLine(), out option);
+        consoleRead = Console.ReadLine();
+        consoleRead = Regex.Replace(consoleRead, @"\D", "");
+        consoleRead.Trim();
+        bool parse = int.TryParse(consoleRead, out option);
 
         if (parse == true)
         {
@@ -312,22 +354,11 @@ static void menuHandler()
 
             case "playMenu":
             {
-                playMenu();
-                break;
-            }
-            case "playTournamentMenu":
-            {
-                playTournamentMenu();
-                break;
-            }
-            case "playOVOMenu":
-            {
-                playOVOMenu();
-                break;
-            }
-            case "playFFAMenu":
-            {
-                playFFAMenu();
+                int[] playerListIndex = playMenu();
+                if ((playerListIndex[0] != -1) && (playerListIndex[1] != -1))
+                {
+                    playCombat(playerListIndex);
+                }
                 break;
             }
 
@@ -450,51 +481,152 @@ static void mainMenu()
 
 #region Play
 
-static void playMenu()
+static int[] playMenu()
 {
+    int charCount = characterManager.charactersList.Count;
+    int[] playerListIndex = [-1,-1];
 
-    GUI.playMenu();
-    int option = inputOption(4);
-    switch (option)
+    if (charCount >= 2)
     {
-        case 1:
-        {
-            GLOBAL.menuState = "playTournamentMenu";
-            break;
-        }
-        case 2:
-        {
-            GLOBAL.menuState = "playOVOMenu";
-            break;
-        }
-        case 3:
-        {
-            GLOBAL.menuState = "playFFAMenu";
-            break;
-        }
-        case 4:
+
+        GUI.playMenu(true);
+        listCharacters(charCount,-1);
+
+        int option = inputOption(charCount + 1);
+        if (option == (charCount + 1))
         {
             GLOBAL.menuState = "mainMenu";
-            break;
+            return playerListIndex;
+        }
+        else
+        {
+            playerListIndex[0] = (option - 1);
+            GUI.playMenu(false);
+            listCharacters(charCount,playerListIndex[0]);
+
+            option = inputOption(charCount + 1);
+            while((option - 1) == playerListIndex[0])
+            {
+                GUI.playAlreadySelected();
+                sndManager.fxPlay(0);
+                option = inputOption(charCount + 1);
+            }
+
+            if (option == (charCount + 1))
+            {
+                GLOBAL.menuState = "mainMenu";
+                return playerListIndex;
+            }
+            else
+            {
+                playerListIndex[1] = (option - 1);
+                return playerListIndex;
+            }
+        }
+
+    }
+    else
+    {
+        noCharacters();
+        return playerListIndex;
+    }
+}
+
+#region Combat
+
+static void playCombat(int[] playerIndex)
+{
+    playerCharacter player1 = characterManager.charactersList[playerIndex[0]];
+    playerCharacter player2 = characterManager.charactersList[playerIndex[1]];
+    GUI.playStartCombat(player1,player2);
+    int option = inputOption(2);
+    if (option == 2)
+    {
+        GLOBAL.menuState = "playMenu";
+        return;
+    }
+
+    int first = 0;
+    float initiative1 = player1.turnInitiative();
+    float initiative2 = player2.turnInitiative();
+    if (initiative1 > initiative2) {first = 1;} else {first = 2;}
+    int winner = combatLoop(first,player1,player2);
+
+    GUI.playWinner(winner,player1.cName,player2.cName);
+    option = inputOption(2);
+    if (winner == 1)
+    {
+        player1.takeVictory();
+        player2.takeLoss();
+        if (option == 1)
+        {
+            killPlayer(player2);
+        }
+    }
+    if (winner == 2)
+    {
+        player2.takeVictory();
+        player1.takeLoss();
+        if (option == 1)
+        {
+            killPlayer(player1);
         }
     }
 
+    sndManager.switchMusic();
+    GLOBAL.menuState = "mainMenu";
 }
 
-static void playTournamentMenu()
+static int combatLoop(int turnOrder, playerCharacter player1, playerCharacter player2)
 {
-
-}
-
-static void playOVOMenu()
-{
+    int winner = 0;
     
+    GUI.refresh();
+    sndManager.switchMusic();
+    while((player1.cCurrenthp > 0) && (player2.cCurrenthp > 0))
+    {
+        if (turnOrder == 1)
+        {
+            float dmg = player1.dealDamage();
+            float rmd = (float)GLOBAL.randomGen.Next(1,101);
+            dmg *= rmd;
+            player2.takeDamage(dmg);
+            sndManager.fxPlay(player1.attackFx());
+            winner = 1;
+            turnOrder = 2;
+        }
+        else
+        {
+            float dmg = player2.dealDamage();
+            float rmd = (float)GLOBAL.randomGen.Next(1,101);
+            dmg *= rmd;
+            player1.takeDamage(dmg);
+            sndManager.fxPlay(player2.attackFx());
+            winner = 2;
+            turnOrder = 1;
+        }
+
+        GUI.combatTurn(player2,player1,turnOrder);
+        Console.ReadLine();
+    }
+
+    player1.cCurrenthp = player1.MAX_HP;
+    player2.cCurrenthp = player2.MAX_HP;
+    return winner;
 }
 
-static void playFFAMenu()
+static void killPlayer(playerCharacter player)
 {
-    
+    player.deleteChar();
+    player = null;
+    GC.Collect();
+    GC.WaitForPendingFinalizers();
+    sndManager.fxPlay(7);
+    GUI.killed();
+    Console.ReadLine();
 }
+
+#endregion
 
 #endregion
 
@@ -510,27 +642,27 @@ static void charMenu()
         case 1:
         {
             GLOBAL.menuState = "charCustomMenu";
-            break;
+            return;
         }
         case 2:
         {
             GLOBAL.menuState = "charRandomMenu";
-            break;
+            return;
         }
         case 3:
         {
             GLOBAL.menuState = "charBrowseMenu";
-            break;
+            return;
         }
         case 4:
         {
             GLOBAL.menuState = "resetCharactersMenu";
-            break;
+            return;
         }
         case 5:
         {
             GLOBAL.menuState = "mainMenu";
-            break;
+            return;
         }
     }
 
@@ -571,7 +703,7 @@ static unsafe void createCustomChar()
             {
                 if (charCustomValidate(pointer) == true)
                 {
-                    playerCharacter customCharacter = new playerCharacter((*pointer).cName,(*pointer).cNickname,(*pointer).AGE,(*pointer).CLASS,(*pointer).MAX_HP,(*pointer).SPEED,(*pointer).STRENGH,(*pointer).DEXTERITY,(*pointer).ARMOR,Guid.NewGuid(),0);
+                    playerCharacter customCharacter = new playerCharacter((*pointer).cName,(*pointer).cNickname,(*pointer).AGE,(*pointer).CLASS,(*pointer).MAX_HP,(*pointer).SPEED,(*pointer).STRENGH,(*pointer).DEXTERITY,(*pointer).ARMOR,Guid.NewGuid(),0,1,0);
                     customCharacter.saveChar(true);
                     characterManager.charactersList.Add(customCharacter);
                     sndManager.fxPlay(8);
@@ -803,18 +935,12 @@ static void charRandomMenu()
 
 static int charBrowseMenu()
 {
-
-    if (characterManager.charactersList.Count >= 1)
+    int charCount = characterManager.charactersList.Count;
+    if (charCount >= 1)
     {
 
         GUI.charBrowseMenu();
-        characterManager.sortListbyVictories();
-        int charCount = characterManager.charactersList.Count;
-        for (int i = 0; i < charCount; i++)
-        {
-            GUI.charListItem(i,characterManager.charactersList[i]);
-        }
-        GUI.charEndBrowse(charCount + 1);
+        listCharacters(charCount,-1);
 
         int option = inputOption(charCount + 1);
         if (option == (charCount + 1))
@@ -830,12 +956,28 @@ static int charBrowseMenu()
     }
     else
     {
-        GUI.charNoCharacters();
-        Console.ReadLine();
-        GLOBAL.menuState = "charMenu";
+        noCharacters();
         return -1;
     }
+}
 
+static void listCharacters(int charCount, int mark)
+{
+    characterManager.sortListbyVictories();
+    for (int i = 0; i < charCount; i++)
+    {
+        if (i == mark)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            GUI.charListItem(i,characterManager.charactersList[i]);
+            Console.ForegroundColor = GLOBAL.textColor;
+        }
+        else
+        {
+            GUI.charListItem(i,characterManager.charactersList[i]);
+        }
+    }
+    GUI.charEndBrowse(charCount + 1);
 }
 
 static int charEditMenu(int item, playerCharacter character)
@@ -926,10 +1068,17 @@ static void resetCharactersMenu()
     }
     else
     {
-        GUI.charNoCharacters();
-        Console.ReadLine();
-        GLOBAL.menuState = "charMenu";
+        noCharacters();
+        return;
     }
+}
+
+static void noCharacters()
+{
+    sndManager.fxPlay(0);
+    GUI.charNoCharacters();
+    Console.ReadLine();
+    GLOBAL.menuState = "charMenu";
 }
 
 #endregion
@@ -946,27 +1095,27 @@ static void optionsMenu()
         case 1:
         {
             GLOBAL.menuState = "optionsLanguageChange";
-            break;
+            return;
         }
         case 2:
         {
             GLOBAL.menuState = "optionsDmgAdjMenu";
-            break;
+            return;
         }
         case 3:
         {
             GLOBAL.menuState = "optionsAttPLvlMenu";
-            break;
+            return;
         }
         case 4:
         {
             GLOBAL.menuState = "optionsTxtColorMenu";
-            break;
+            return;
         }
         case 5:
         {
             GLOBAL.menuState = "mainMenu";
-            break;
+            return;
         }
     }
 
@@ -1048,89 +1197,89 @@ static void optionsTxtColorMenu()
             Console.ForegroundColor = ConsoleColor.White;
             configIni.saveData("textColor","white");
             GLOBAL.menuState = "optionsTxtColorMenu";
-            break;
+            return;
         }
         case 2:
         {
             Console.ForegroundColor = ConsoleColor.Green;
             configIni.saveData("textColor","green");
             GLOBAL.menuState = "optionsTxtColorMenu";
-            break;
+            return;
         }
         case 3:
         {
             Console.ForegroundColor = ConsoleColor.Red;
             configIni.saveData("textColor","red");
             GLOBAL.menuState = "optionsTxtColorMenu";
-            break;
+            return;
         }
         case 4:
         {
             Console.ForegroundColor = ConsoleColor.Blue;
             configIni.saveData("textColor","blue");
             GLOBAL.menuState = "optionsTxtColorMenu";
-            break;
+            return;
         }
         case 5:
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             configIni.saveData("textColor","yellow");
             GLOBAL.menuState = "optionsTxtColorMenu";
-            break;
+            return;
         }
         case 6:
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
             configIni.saveData("textColor","cyan");
             GLOBAL.menuState = "optionsTxtColorMenu";
-            break;
+            return;
         }
         case 7:
         {
             Console.ForegroundColor = ConsoleColor.Magenta;
             configIni.saveData("textColor","magenta");
             GLOBAL.menuState = "optionsTxtColorMenu";
-            break;
+            return;
         }
         case 8:
         {
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             configIni.saveData("textColor","dkgreen");
             GLOBAL.menuState = "optionsTxtColorMenu";
-            break;
+            return;
         }
         case 9:
         {
             Console.ForegroundColor = ConsoleColor.DarkRed;
             configIni.saveData("textColor","dkred");
             GLOBAL.menuState = "optionsTxtColorMenu";
-            break;
+            return;
         }
         case 10:
         {
             Console.ForegroundColor = ConsoleColor.DarkBlue;
             configIni.saveData("textColor","dkblue");
             GLOBAL.menuState = "optionsTxtColorMenu";
-            break;
+            return;
         }
         case 11:
         {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             configIni.saveData("textColor","dkyellow");
             GLOBAL.menuState = "optionsTxtColorMenu";
-            break;
+            return;
         }
         case 12:
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             configIni.saveData("textColor","dkcyan");
             GLOBAL.menuState = "optionsTxtColorMenu";
-            break;
+            return;
         }
         case 13:
         {
             GLOBAL.menuState = "optionsMenu";
-            break;
+            return;
         }
     }
 }

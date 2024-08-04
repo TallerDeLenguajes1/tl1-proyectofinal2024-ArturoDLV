@@ -33,9 +33,27 @@ namespace namespaceTexts
 
         #region Play
 
-        public static string? tournament {get; set;}
+        #region Menu
         public static string? oneVone {get; set;}
-        public static string? freeforall {get; set;}
+        public static string? selectplayer1 {get; set;}
+        public static string? selectplayer2 {get; set;}
+        public static string? alreadyselect {get; set;}
+        public static string? against {get; set;}
+        public static string? fight {get; set;}
+        #endregion
+
+        #region Combat
+        public static string? attacks {get; set;}
+        public static string? defends {get; set;}
+        public static string? combatcontinue {get; set;}
+        public static string? combatwinner {get; set;}
+        public static string? combatlooser {get; set;}
+        public static string? killsure {get; set;}
+        public static string? killexplain {get; set;}
+        public static string? killconfirm {get; set;}
+        public static string? mercy {get; set;}
+        public static string? killed {get; set;}
+        #endregion
 
         #endregion
 
@@ -163,9 +181,27 @@ namespace namespaceTexts
 
         #region Play
 
-        public string? tournament {get; set;}
+        #region Menu
         public string? oneVone {get; set;}
-        public string? freeforall {get; set;}
+        public string? selectplayer1 {get; set;}
+        public string? selectplayer2 {get; set;}
+        public string? alreadyselect {get; set;}
+        public string? against {get; set;}
+        public string? fight {get; set;}
+        #endregion
+
+        #region Combat
+        public string? attacks {get; set;}
+        public string? defends {get; set;}
+        public string? combatcontinue {get; set;}
+        public string? combatwinner {get; set;}
+        public string? combatlooser {get; set;}
+        public string? killsure {get; set;}
+        public string? killexplain {get; set;}
+        public string? killconfirm {get; set;}
+        public string? mercy {get; set;}
+        public string? killed {get; set;}
+        #endregion
 
         #endregion
 

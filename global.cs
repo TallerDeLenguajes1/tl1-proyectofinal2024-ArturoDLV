@@ -48,10 +48,11 @@ namespace namespaceGlobal
         #region Variables
 
         public static string menuState = "mainMenu";
+        public static Thread? musicThread = null;
         public static string locCurrentLanguage = locSp;
         public static bool internetConnection = false;
-        public static float dmgAdjust = 500;
-        public static ConsoleColor textColor = ConsoleColor.DarkGreen;
+        public static float dmgAdjust = 300;
+        public static ConsoleColor textColor = ConsoleColor.Cyan;
 
         #endregion
 
@@ -60,6 +61,8 @@ namespace namespaceGlobal
         {
 
             public static int attributesPerLevel = 2;
+            public const int xpPerVic = 1;
+            public const int xpPerLos = -1;
 
             #region Character's class values
             public static class SCOUT

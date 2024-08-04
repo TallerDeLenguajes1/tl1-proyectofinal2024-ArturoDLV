@@ -1,5 +1,6 @@
 using namespaceGlobal;
 using NAudio.Wave;
+using System.Threading;
 
 namespace namespaceSoundManager
 {
@@ -35,6 +36,7 @@ namespace namespaceSoundManager
 
         public static void fxPlay(int n)
         {
+            fxOutput[n].Stop();
             fxOutput[n].Init(fxFiles[n]);
             fxFiles[n].Position = 0;
             fxOutput[n].Play();
@@ -69,80 +71,91 @@ namespace namespaceSoundManager
         private static WaveOutEvent? outputDevice;
         private static AudioFileReader? menu;
         private static AudioFileReader? megalovania;
-        private static bool isPlayingMenu;
-        private static Thread? musicThread;
-        private static bool threadLoop = true;
+        private static bool isPlayingMenu = true;
+        private static ManualResetEvent _pause = new ManualResetEvent(true);
 
         public static void iniMusic()
         {
             menu = new AudioFileReader(GLOBAL.musMenu);
             megalovania = new AudioFileReader(GLOBAL.musMegalovania);
             outputDevice = new WaveOutEvent();
+            outputDevice.Volume = ((float)(0.5));
 
-            isPlayingMenu = true;
-            musicThread = new Thread(playMusicLoop);
-            musicThread.IsBackground = true;
-            musicThread.Start();
+            GLOBAL.musicThread = new Thread(playMusicLoop);
+            GLOBAL.musicThread.IsBackground = true;
+            GLOBAL.musicThread.Start();
         }
 
         private static void playMusicLoop()
         {
-            while(threadLoop == true)
+            while(true)
             {
-                while (outputDevice.PlaybackState == PlaybackState.Playing)
+                _pause.WaitOne();
+                if (outputDevice.PlaybackState != PlaybackState.Playing)
                 {
-                    Thread.Sleep(100);
-                }
 
-                outputDevice.Stop();
-
-                if ((menu != null) && (megalovania != null))
-                {
-                    if (isPlayingMenu == true)
+                    outputDevice.Stop();
+                    if ((menu != null) && (megalovania != null) && (outputDevice != null))
                     {
-                        outputDevice.Init(menu);
-                        outputDevice.PlaybackStopped += (s, e) =>
+                        if (isPlayingMenu == true)
                         {
-                            menu.Position = 0;
-                        };
-                    }
-                    else
-                    {
-                        outputDevice.Init(megalovania);
-                        outputDevice.PlaybackStopped += (s, e) =>
+                            outputDevice.Init(menu);
+                            outputDevice.PlaybackStopped += (s, e) =>
+                            {
+                                menu.Position = 0;
+                            };
+                            outputDevice.Play();
+                        }
+                        else
                         {
-                            megalovania.Position = 0;
-                        };
+                            outputDevice.Init(megalovania);
+                            outputDevice.PlaybackStopped += (s, e) =>
+                            {
+                                megalovania.Position = 0;
+                            };
+                            outputDevice.Play();
+                        }
                     }
-                    outputDevice.Play();
-                }
 
+                }
             }
         }
 
         public static void switchMusic()
         {
+            _pause.Reset();
             outputDevice.Stop();
 
             if (isPlayingMenu)
             {
+                outputDevice.Init(megalovania);
                 megalovania.Position = 0;
             }
             else
             {
+                outputDevice.Init(menu);
                 menu.Position = 0;
             }
 
+            outputDevice.Play();
             isPlayingMenu = !isPlayingMenu;
+            _pause.Set();
         }
 
         public static void disposeMusic()
         {
+            _pause.Reset();
             outputDevice.Stop();
             outputDevice.Dispose();
             menu.Dispose();
             megalovania.Dispose();
-            threadLoop = false;
+            outputDevice = null;
+            menu = null;
+            megalovania = null;
+            _pause.Dispose();
+            GLOBAL.musicThread = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
         #endregion
