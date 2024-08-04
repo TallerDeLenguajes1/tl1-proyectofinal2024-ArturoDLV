@@ -107,7 +107,7 @@ Cabe aclarar que muchas decisiones fueron tomadas con una gran inspiracion en el
 
 #### [`Volver atras`](#sub-indice)
 
-- <u>**Clases**:</u> La consigna no da ningun detalle sobre las clases, y bajo su mirada tan solo es un dato arbitrario y sin uso. Por esto mismo he armado *4 clases distintivas*, y cada una tiene sus particularidades, reflejadas en sus *estadisticas* y su *subida de nivel*. La clase puede ser elegida directamente en la creacion de personaje, o asignada automaticamente dependiendo de los atributos seleccionados. Las clases que se han añadido son:
+- <u>**Clases**:</u> La consigna no da ningun detalle sobre lo que llama *tipo*, y bajo su mirada tan solo es un dato arbitrario y sin uso. Por esto mismo lo considere un dato afin a tipos de combates, tambien llamado clases en los juegos de rol. He armado *4 clases distintivas*, y cada una tiene sus particularidades, reflejadas en sus *estadisticas* y su *subida de nivel*. La clase puede ser elegida directamente en la creacion de personaje, o asignada automaticamente dependiendo de los atributos seleccionados. Las clases que se han añadido son:
     1. **El Barbaro**: Fuerza bruta con poca o nada durabilidad. Es la epitomia del dicho "La mejor defensa es una buena ofensa".
     2. **El Caballero**: Con gran armadura y buena habilidad con las armas, es un peleador resistente y formidable, pero su armadura lo hace lento y poco flexible.
     3. **El explorador**: Rapido y elusivo, el explorador tratara de atacar sin ser visto, y constantemente se movera alrededor de su enemigo, pero cuidado, un solo golpe podria ser letal.

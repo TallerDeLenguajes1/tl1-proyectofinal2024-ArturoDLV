@@ -96,24 +96,26 @@ namespace namespaceSoundManager
 
                 outputDevice.Stop();
 
-                if (isPlayingMenu == true)
+                if ((menu != null) && (megalovania != null))
                 {
-                    outputDevice.Init(menu);
-                    outputDevice.PlaybackStopped += (s, e) =>
+                    if (isPlayingMenu == true)
                     {
-                        menu.Position = 0;
-                    };
-                }
-                else
-                {
-                    outputDevice.Init(megalovania);
-                    outputDevice.PlaybackStopped += (s, e) =>
+                        outputDevice.Init(menu);
+                        outputDevice.PlaybackStopped += (s, e) =>
+                        {
+                            menu.Position = 0;
+                        };
+                    }
+                    else
                     {
-                        megalovania.Position = 0;
-                    };
+                        outputDevice.Init(megalovania);
+                        outputDevice.PlaybackStopped += (s, e) =>
+                        {
+                            megalovania.Position = 0;
+                        };
+                    }
+                    outputDevice.Play();
                 }
-
-                outputDevice.Play();
 
             }
         }

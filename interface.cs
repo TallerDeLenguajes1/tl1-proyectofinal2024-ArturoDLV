@@ -156,9 +156,9 @@ namespace namespaceGUI
             Console.WriteLine(" " + TXT.charpersonalinfo + ": \n");
             auxString = (" | " + TXT.charname + ": " + name);
             while (auxString.Length < itemSep) {auxString += " ";}
-            auxString += ("| " + TXT.charnick + ": " + nick);
+            auxString += ("| " + TXT.charnick + ": " + nick + "\n");
             Console.WriteLine(auxString);
-            auxString = ("\n | " + TXT.charage + ": " + age.ToString());
+            auxString = (" | " + TXT.charage + ": " + age.ToString());
             while (auxString.Length < itemSep) {auxString += " ";}
             auxString += ("| " + TXT.charclass + ": " + classToText(_class));
             Console.WriteLine(auxString);
@@ -185,6 +185,70 @@ namespace namespaceGUI
             horLines();
         }
 
+        public static void charCustomInfo(string name, string nick, int age, string _class)
+        {
+            refresh();
+            Console.WriteLine("\n " + TXT.characters);
+            Console.WriteLine(" " + TXT.customchar);
+            horLines();
+
+            Console.WriteLine(" " + TXT.charpersonalinfo + ": \n");
+            Console.WriteLine(" " + TXT.charname + ": " + name);
+            Console.WriteLine(" " + TXT.charnick + ": " + nick);
+            Console.WriteLine(" " + TXT.charage + ": " + age.ToString());
+            Console.WriteLine(" " + TXT.charclass + ": " + classToText(_class));
+
+            tutorial();
+            Console.WriteLine("\n 1: " + TXT.charname);
+            Console.WriteLine(" 2: " + TXT.charnick);
+            Console.WriteLine(" 3: " + TXT.charage);
+            Console.WriteLine(" 4: " + TXT.charclass);
+            Console.WriteLine(" 5: " + TXT.goback);
+            horLines();
+        }
+
+        public static void charCustomStatistics(float hp, int spd, int str, int dex, int armor, double availablePoints)
+        {
+            Console.Clear();
+            Console.WriteLine("\n " + TXT.characters);
+            Console.WriteLine(" " + TXT.customchar);
+            horLines();
+
+            Console.WriteLine(" " + TXT.charstatistics + ": \n\n");
+            Console.WriteLine(" | " + TXT.charhp + ": " + hp.ToString("N0"));
+            Console.WriteLine(" | " + TXT.charspd + ": " + spd.ToString("N0"));
+            Console.WriteLine(" | " + TXT.chardex + ": " + dex.ToString("N0"));
+            Console.WriteLine(" | " + TXT.charstr + ": " + str.ToString("N0"));
+            Console.WriteLine(" | " + TXT.chararmor + ": " + armor.ToString("N0"));
+            horLines();
+
+            Console.WriteLine("\n " + TXT.explaincustompoints);
+            Console.WriteLine(" " + TXT.availablepoints + ": " + availablePoints.ToString("N0"));
+
+            tutorial();
+            Console.WriteLine("\n 01: " + TXT.increasestat + ": " +TXT.charhp);
+            Console.WriteLine(" 02: " + TXT.decreasestat + ": " +TXT.charhp);
+            Console.WriteLine(" 03: " + TXT.increasestat + ": " +TXT.charspd);
+            Console.WriteLine(" 04: " + TXT.decreasestat + ": " +TXT.charspd);
+            Console.WriteLine(" 05: " + TXT.increasestat + ": " +TXT.chardex);
+            Console.WriteLine(" 06: " + TXT.decreasestat + ": " +TXT.chardex);
+            Console.WriteLine(" 07: " + TXT.increasestat + ": " +TXT.charstr);
+            Console.WriteLine(" 08: " + TXT.decreasestat + ": " +TXT.charstr);
+            Console.WriteLine(" 09: " + TXT.increasestat + ": " +TXT.chararmor);
+            Console.WriteLine(" 10: " + TXT.decreasestat + ": " +TXT.chararmor);
+            horLines();
+            Console.WriteLine("\n 11: " + TXT.goback);
+            horLines();
+        }
+
+        public static void charInvalidChar()
+        {
+            refresh();
+            Console.WriteLine("\n");
+            horLines();
+            Console.WriteLine(" " + TXT.invalidchar);
+            horLines();
+        }
         public static void charRmdMenu()
         {
             refresh();
@@ -253,7 +317,7 @@ namespace namespaceGUI
                 }
                 default:
                 {
-                    text = "";
+                    text = "---";
                     break;
                 }
             }

@@ -288,33 +288,16 @@ namespace namespaceCharacter
 
             #region Class
 
-            if (_class == "")
+            if (String.IsNullOrEmpty(_class) == true)
             {
+                int bigger = int.Max(cSpeed,cDexterity);
+                bigger = int.Max(bigger,cStrengh);
+                bigger = int.Max(bigger,cArmor);
 
-                float biggerN = 0;
-                cClass = "";
-                
-                if (cSpeed >= biggerN)
-                {
-                    biggerN = cSpeed;
-                    cClass = "Scout";
-                }
-                if ((cDexterity * 2) >= biggerN)
-                {
-                    biggerN = (float)(cDexterity * 1.5);
-                    cClass = "Rogue";
-                }
-                if (cArmor >= biggerN)
-                {
-                    biggerN = cArmor;
-                    cClass = "Knight";
-                }
-                if (cStrengh >= biggerN)
-                {
-                    biggerN = cStrengh;
-                    cClass = "Barbarian";
-                }
-
+                if (bigger == cSpeed) {cClass = "Scout";}
+                if (bigger == cDexterity) {cClass = "Rogue";}
+                if (bigger == cStrengh) {cClass = "Knight";}
+                if (bigger == cArmor) {cClass = "Barbarian";}
             }
             else
             {
@@ -332,6 +315,7 @@ namespace namespaceCharacter
     {
 
         public static List<playerCharacter> charactersList = new List<playerCharacter>();
+
         public static void sortListbyVictories()
         {
             charactersList.Sort((character1,character2) => character2.VICTORIES.CompareTo(character1.VICTORIES));
@@ -368,7 +352,7 @@ namespace namespaceCharacter
 
         #region Loading Characters
 
-        private class dummyChar
+        public class dummyChar
         {
 
             public int VICTORIES {get; set;}
@@ -395,6 +379,22 @@ namespace namespaceCharacter
             public int ARMOR {get; set;}
             
             #endregion
+
+            public double availablePoints;
+
+            public void iniValues()
+            {
+                availablePoints = GLOBAL.charCreation.pointsGiven;
+                cName = "";
+                cNickname = "";
+                CLASS = "";
+                AGE = 0;
+                MAX_HP = 100;
+                SPEED = 1;
+                STRENGH = 1;
+                DEXTERITY = 1;
+                ARMOR = 1;
+            }
 
         }
 

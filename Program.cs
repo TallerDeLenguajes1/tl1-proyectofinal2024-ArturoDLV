@@ -342,7 +342,8 @@ static void menuHandler()
             }
             case "charCustomMenu":
             {
-                charCustomMenu();
+                createCustomChar();
+                GLOBAL.menuState = "charMenu";
                 break;
             }
             case "charRandomMenu":
@@ -535,25 +536,258 @@ static void charMenu()
 
 }
 
-static void charCustomMenu()
+static unsafe void createCustomChar()
 {
-    string name = "";
-    string nick = "";
-    int age = 0;
-    string _class = "";
-    float hp = 100;
-    int spd = 1, dex = 1, str = 1, armor = 1;
-    double availablePoints = GLOBAL.charCreation.pointsGiven;
+    characterManager.dummyChar character = new characterManager.dummyChar();
+    character.iniValues();
+    characterManager.dummyChar *pointer = &character;
 
-    GUI.charCustomMenu(name,nick,age,_class,hp,spd,str,dex,armor);
+    int option;
+    do
+    {
+        option = charCustomMenu(pointer);
+        switch(option)
+        {
+            case 1:
+            {
+                bool done = false;
+                do
+                {
+                    done = charCustomInfo(pointer);
+                } while (done == false);
+                break;
+            }
+            case 2:
+            {
+                GUI.refresh();
+                bool done = false;
+                do
+                {
+                    done = charCustomStatistics(pointer);
+                } while (done == false);
+                break;
+            }
+            case 3:
+            {
+                if (charCustomValidate(pointer) == true)
+                {
+                    playerCharacter customCharacter = new playerCharacter((*pointer).cName,(*pointer).cNickname,(*pointer).AGE,(*pointer).CLASS,(*pointer).MAX_HP,(*pointer).SPEED,(*pointer).STRENGH,(*pointer).DEXTERITY,(*pointer).ARMOR,Guid.NewGuid(),0);
+                    customCharacter.saveChar(true);
+                    characterManager.charactersList.Add(customCharacter);
+                    sndManager.fxPlay(8);
+                    option = 4;
+                }
+                else
+                {
+                    GUI.charInvalidChar();
+                    Console.ReadLine();
+                }
+                break;
+            }
+        }
+    } while (option != 4);
+
+    pointer = null;
+    character = null;
+    GC.Collect();
+    GC.WaitForPendingFinalizers();
+}
+
+static unsafe int charCustomMenu(characterManager.dummyChar *character)
+{
+    GUI.charCustomMenu((*character).cName,(*character).cNickname,(*character).AGE,(*character).CLASS,(*character).MAX_HP,(*character).SPEED,(*character).STRENGH,(*character).DEXTERITY,(*character).ARMOR);
     int option = inputOption(4);
+    return option;
+}
+
+static unsafe bool charCustomInfo(characterManager.dummyChar *character)
+{
+    GUI.charCustomInfo((*character).cName,(*character).cNickname,(*character).AGE,(*character).CLASS);
+    int option = inputOption(5);
     switch(option)
     {
+        case 1:
+        {
+            (*character).cName = getName();
+            return false;
+        }
+        case 2:
+        {
+            (*character).cNickname = getName();
+            return false;
+        }
+        case 3:
+        {
+            (*character).AGE = inputOption(300);
+            return false;
+        }
         case 4:
         {
-            GLOBAL.menuState = "charMenu";
-            break;
+            switch((*character).CLASS)
+            {
+                case "":
+                {
+                    (*character).CLASS = "Scout";
+                    break;
+                }
+                case "Scout":
+                {
+                    (*character).CLASS = "Rogue";
+                    break;
+                }
+                case "Rogue":
+                {
+                    (*character).CLASS = "Knight";
+                    break;
+                }
+                case "Knight":
+                {
+                    (*character).CLASS = "Barbarian";
+                    break;
+                }
+                case "Barbarian":
+                {
+                    (*character).CLASS = "";
+                    break;
+                }
+            }
+            return false;
         }
+        case 5:
+        {
+            return true;
+        }
+    }
+    return true;
+}
+
+static unsafe bool charCustomStatistics(characterManager.dummyChar *character)
+{
+    GUI.charCustomStatistics((*character).MAX_HP,(*character).SPEED,(*character).STRENGH,(*character).DEXTERITY,(*character).ARMOR,(*character).availablePoints);
+    int option = inputOption(11);
+    switch(option)
+    {
+        case 1:
+        {
+            if ((-(GLOBAL.charCreation.hpCost * 10) + (*character).availablePoints) >= 0)
+            {
+                (*character).MAX_HP += 10;
+                (*character).availablePoints -= (GLOBAL.charCreation.hpCost * 10);
+            }
+            return false;
+        }
+        case 2:
+        {
+            if (((*character).MAX_HP - 1) > 100)
+            {
+                (*character).MAX_HP -= 10;
+                (*character).availablePoints += (GLOBAL.charCreation.hpCost * 10);
+            }
+            return false;
+        }
+        case 3:
+        {
+            if ((-GLOBAL.charCreation.spdCost + (*character).availablePoints) >= 0)
+            {
+                (*character).SPEED ++;
+                (*character).availablePoints -= GLOBAL.charCreation.spdCost;
+            }
+            return false;
+        }
+        case 4:
+        {
+            if (((*character).SPEED - 1) > 1)
+            {
+                (*character).SPEED --;
+                (*character).availablePoints += GLOBAL.charCreation.spdCost;
+            }
+            return false;
+        }
+        case 5:
+        {
+            if ((-GLOBAL.charCreation.dexCost + (*character).availablePoints) >= 0)
+            {
+                (*character).DEXTERITY ++;
+                (*character).availablePoints -= GLOBAL.charCreation.dexCost;
+            }
+            return false;
+        }
+        case 6:
+        {
+            if (((*character).DEXTERITY - 1) > 1)
+            {
+                (*character).DEXTERITY --;
+                (*character).availablePoints += GLOBAL.charCreation.dexCost;
+            }
+            return false;
+        }
+        case 7:
+        {
+            if ((-GLOBAL.charCreation.strCost + (*character).availablePoints) >= 0)
+            {
+                (*character).STRENGH ++;
+                (*character).availablePoints -= GLOBAL.charCreation.strCost;
+            }
+            return false;
+        }
+        case 8:
+        {
+            if (((*character).STRENGH - 1) > 1)
+            {
+                (*character).STRENGH --;
+                (*character).availablePoints += GLOBAL.charCreation.strCost;
+            }
+            return false;
+        }
+        case 9:
+        {
+            if ((-GLOBAL.charCreation.armorCost + (*character).availablePoints) >= 0)
+            {
+                (*character).ARMOR ++;
+                (*character).availablePoints -= GLOBAL.charCreation.armorCost;
+            }
+            return false;
+        }
+        case 10:
+        {
+            if (((*character).ARMOR - 1) > 1)
+            {
+                (*character).ARMOR --;
+                (*character).availablePoints += GLOBAL.charCreation.armorCost;
+            }
+            return false;
+        }
+        case 11:
+        {
+            return true;
+        }
+    }
+    return true;
+}
+
+static unsafe bool charCustomValidate(characterManager.dummyChar *character)
+{
+    if (String.IsNullOrEmpty((*character).cName) == false)
+    {
+        if (String.IsNullOrEmpty((*character).cNickname) == false)
+        {
+            if ((*character).AGE > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
     }
 }
 

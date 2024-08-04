@@ -43,7 +43,12 @@ namespace namespaceTexts
 
         #region Menu
         public static string? customchar {get; set;}
+        public static string? explaincustompoints {get; set;}
+        public static string? availablepoints {get; set;}
+        public static string? increasestat {get; set;}
+        public static string? decreasestat {get; set;}
         public static string? finishchar {get; set;}
+        public static string? invalidchar {get; set;}
         public static string? randomchar {get; set;}
         public static string? explainrandomchar {get; set;}
         public static string? validrandomchar {get; set;}
@@ -168,7 +173,12 @@ namespace namespaceTexts
 
         #region Menu
         public string? customchar {get; set;}
+        public string? explaincustompoints {get; set;}
+        public string? availablepoints {get; set;}
+        public string? increasestat {get; set;}
+        public string? decreasestat {get; set;}
         public string? finishchar {get; set;}
+        public string? invalidchar {get; set;}
         public string? randomchar {get; set;}
         public string? explainrandomchar {get; set;}
         public string? validrandomchar {get; set;}
